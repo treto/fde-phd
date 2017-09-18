@@ -10,18 +10,22 @@ rows_columns_count = size(M);
 nrows = rows_columns_count(1);
 tic
 for model_id=1:nrows/2
-% Constructing model
+%%% Constructing model
     zeroes = M(model_id*2 - 1, :);
     poles = M(model_id*2, :);
     Gz = zpk(zeroes, poles, k_amp, 'Variable', 'z', 'Ts', Ts);    
-% Stability critera 
+%%% Stability critera 
    is_stable = stab_dtime_integer_asym(Gz);
-% % Plotting 
+%  luapunov for dtime
+%  frequency methods?
+%  nyquist/cauchy augmented principle 
+
+%%% % Plotting 
 %     subplot(211)
 %     step(Gz)
 %     subplot(212)
 %     pzmap(Gz)
-% % Saving to file
+%%% % Saving to file
 %     model_name = ['model_output', num2str(model_id)];
 %     print(['output/', model_name], '-dpng')
 end 
