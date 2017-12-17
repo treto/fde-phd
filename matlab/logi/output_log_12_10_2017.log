@@ -1,0 +1,75 @@
+Transfer function
+
+Gz_zeros =
+
+    0.8000    0.5000
+
+
+Gz_poles =
+
+  -1.5000 + 0.0000i   0.2000 + 0.5000i   0.2000 - 0.5000i
+
+Using inversed input to the transfer function w = 1/z
+Section: Delaunay triangulation
+Iteration: 0
+Iteration: 1
+Warning: Duplicate data points have been detected and removed.
+ Some point indices will not be referenced by the triangulation. 
+> In delaunay_inversion (line 61) 
+Iteration: 2
+Warning: Duplicate data points have been detected and removed.
+ Some point indices will not be referenced by the triangulation. 
+> In delaunay_inversion (line 61) 
+Iteration: 3
+Warning: Duplicate data points have been detected and removed.
+ Some point indices will not be referenced by the triangulation. 
+> In delaunay_inversion (line 61) 
+Iteration: 4
+Warning: Duplicate data points have been detected and removed.
+ Some point indices will not be referenced by the triangulation. 
+> In delaunay_inversion (line 61) 
+Iteration: 5
+Warning: Duplicate data points have been detected and removed.
+ Some point indices will not be referenced by the triangulation. 
+> In delaunay_inversion (line 61) 
+Iteration: 6
+Warning: Duplicate data points have been detected and removed.
+ Some point indices will not be referenced by the triangulation. 
+> In delaunay_inversion (line 61) 
+Iteration: 7
+Warning: Duplicate data points have been detected and removed.
+ Some point indices will not be referenced by the triangulation. 
+> In delaunay_inversion (line 61) 
+Iteration: 8
+Warning: Duplicate data points have been detected and removed.
+ Some point indices will not be referenced by the triangulation. 
+> In delaunay_inversion (line 61) 
+Iteration: 9
+Warning: Duplicate data points have been detected and removed.
+ Some point indices will not be referenced by the triangulation. 
+> In delaunay_inversion (line 61) 
+Section time: 1.4927
+Section: Curve inf/zero val evaluation
+Section time: 0.27205
+Section: Phase Change Calculation
+get_triangles_with_edge_len_below_delta: found triangles 4022
+Using inversion, replacing zeros for poles, poles for zeros
+Pole candidates count: 64
+Zero candidates count: 19
+Section time: 10.0561
+Section: Evaluation
+The system is unstable, one of the inverted poles lays inside the unit circle
+Section time: 0.00074077
+Section: Plotting
+Section time: 0.37947
+
+Gz_zeros =
+
+    1.2500    2.0000
+
+
+Gz_poles =
+
+  -0.6667 + 0.0000i   0.6897 - 1.7241i   0.6897 + 1.7241i
+
+>> 
