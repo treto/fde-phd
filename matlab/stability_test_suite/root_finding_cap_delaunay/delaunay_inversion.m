@@ -12,8 +12,8 @@ section_time_log = [];
 k_amp = 1;
 Ts = 0.1;
 disp('Transfer function')
-Gz_zeros = [0.8 0.5]
-Gz_poles = [-1.5 (0.2+0.5j) (0.2-0.5j)]
+Gz_zeros = [2 0.3];
+Gz_poles = [5 (0.2+0.5j) (0.2-0.5j)];
 if USE_INVERSION == true
     disp('Using inversed input to the transfer function w = 1/z')
     Gz_zeros = 1./Gz_zeros;
@@ -176,32 +176,36 @@ tic;
 [triangles_near_poles, triangle_count] = get_triangles_with_edge_len_below_delta(tri, V, min_distance_r);
 final_triangles = [];
 pole_points = [];
-zero_points = [];
+singularities = [];
 
 % For each triangle, calculate phase change based on the vertices
 for triangle_id = 1:triangle_count
    triangle_vertices = triangles_near_poles(triangle_id, :);
    triangle_gravity_center = sum(V(triangle_vertices, 1))/3 + sum(V(triangle_vertices, 2))*j/3;
-   phase_change = calculate_phase_change(Gz, triangle_gravity_center, eps);
-   if(phase_change >= 1)
-       final_triangles = [final_triangles; triangles_near_poles(triangle_id,:)];
-       pole_points = [pole_points triangle_gravity_center];
-   elseif(phase_change <= -1)
-       zero_points = [zero_points triangle_gravity_center];
+   if(abs(triangle_gravity_center) < 1)
+%        Only searches for poles/zeros inside the unit circle
+         phase_change = calculate_phase_change_for_triangle(Gz, V(triangle_vertices, :), eps);
+%         phase_change = calculate_phase_change(Gz, triangle_gravity_center, eps);
+       if(phase_change >= 1)
+           final_triangles = [final_triangles; triangles_near_poles(triangle_id,:)];
+           pole_points = [pole_points triangle_gravity_center];
+       elseif(phase_change <= -1)
+           singularities = [singularities triangle_gravity_center];
+       end
    end
 end
 
 if USE_INVERSION == true
 %  Using inversion, so need to substitute zeros and roots
 %  TODO: Why is this needed?
-    display('Using inversion, replacing zeros for poles, poles for zeros')
-    poles_buffer = pole_points;
-    pole_points = zero_points;
-    zero_points = poles_buffer;
+%     display('Using inversion, replacing zeros for poles, poles for zeros')
+%     poles_buffer = pole_points;
+%     pole_points = zero_points;
+%     singularities = poles_buffer;
 end
 
 display(['Pole candidates count: ' num2str(numel(pole_points))])
-display(['Zero candidates count: ' num2str(numel(zero_points))])
+display(['Singularities candidates count: ' num2str(numel(singularities))])
 
 duration = toc;
 section_time_log = [section_time_log [section_name duration]];
@@ -291,7 +295,7 @@ title('triangles near poles')
 % Draw poles/zeros of the transfer functions and points located using
 % evaluation
 subplot(row_count, col_count, [23 24])
-scatter(real(zero_points),imag(zero_points), 'go', 'SizeData',48);  
+scatter(real(singularities),imag(singularities), 'go', 'SizeData',48);  
 hold on
 scatter(real(pole_points),imag(pole_points), 'gx', 'SizeData',48);  
 scatter(Gz_poles_w(:, 1), Gz_poles_w(:, 2), 'rx', 'SizeData',48);  
@@ -304,5 +308,5 @@ if USE_VERBOSE_PROFILING
     disp(['Section time: ' num2str(duration)]);
 end
 
-Gz_zeros
-Gz_poles
+% Gz_zeros
+% Gz_poles

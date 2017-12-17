@@ -8,7 +8,7 @@ phase_diff = eps;
 z = tf('z');
 Gz = (z-1)/(z-2);
 
-input = 2;
+input = 1;
 evalfr(Gz,input)
 % eval_func(Gzer, Gpol, input);
 
