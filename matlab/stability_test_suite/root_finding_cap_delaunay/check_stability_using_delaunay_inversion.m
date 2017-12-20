@@ -263,23 +263,29 @@ if(USE_VERBOSE_PROFILING)
     title('Delaunay triangulation')
     hold on
 
-    subplot(row_count, col_count, 2)
-    scatter(C_r(:, 1), C_r(:, 2), 'g.')
-    title('real(f_z) = 0 (C_r)')
-    xlim([-2 2])
-    ylim([-2 2])
+    if(numel(C_r) > 0)
+        subplot(row_count, col_count, 2)
+        scatter(C_r(:, 1), C_r(:, 2), 'g.')
+        title('real(f_z) = 0 (C_r)')
+        xlim([-2 2])
+        ylim([-2 2])
+    end
 
-    subplot(row_count, col_count, 3)
-    scatter(C_i(:, 1), C_i(:, 2), 'y.')
-    title('imag(f_z) = 0 (C_r)')
-    xlim([-2 2])
-    ylim([-2 2])
-
+    if(numel(C_i) > 0)
+        subplot(row_count, col_count, 3)
+        scatter(C_i(:, 1), C_i(:, 2), 'y.')
+        title('imag(f_z) = 0 (C_r)')
+        xlim([-2 2])
+        ylim([-2 2])
+    end
+    
     subplot(row_count, col_count, 4)
     scatter(real(Gz_zeros), imag(Gz_zeros), 'ro', 'SizeData',48);   
     title('Points of interest - C_r and C_i cross')
     hold on
-    % scatter(C_cross(:, 1), C_cross(:, 2), 'b.', 'SizeData', 48)
+    if(numel(C_cross) > 0)
+        scatter(C_cross(:, 1), C_cross(:, 2), 'b.', 'SizeData', 48)
+    end
     xlim([-2 2])
     ylim([-2 2])
 
