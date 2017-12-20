@@ -1,18 +1,14 @@
-% @brief: Verifies stability of a discrete-time, integer-order system by checking i
-% eigenvalues of the characteristic polynomial all lay inside the complex
-% unit circle
+% @brief: Calculates the value of characteristic equation given as list of
+% zeros for given input
 % 
-% @param transfer_fun TransferFunction objject
+% @param Gz list of zeros of the characteristic equation
+% @param input complex value as the input to char equation to evaluate
 %
-% @retval boolean value, true if system is stable, false otherwise
-function point = eval_func(Gz, Gp, input)
+% @retval char equation value at input
+function point = eval_func(Gz, input)
     output = 1;
     for i=1:numel(Gz)
         output = output*(input - Gz(i));
-    end
-
-    for i=1:numel(Gp)
-        output = output/(input - Gp(i));
     end
     point = output;
 end

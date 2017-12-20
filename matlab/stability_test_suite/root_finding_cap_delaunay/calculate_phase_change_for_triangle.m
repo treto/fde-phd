@@ -15,8 +15,8 @@ function phase_change = calculate_phase_change_for_triangle(Gz, triangle_vertice
     arg_diff = [angle(output(2)/output(1)) angle(output(3)/output(2)) angle(output(1)/output(3))];
     sum_angle = sum(arg_diff)/(2*pi);
     phase_change = sum_angle;
-    if(phase_change == 1)
-        sum(arg_diff)
-        output
-    end
+%     if(phase_change == 1)
+%         sum(arg_diff)
+%         output
+%     end
 end

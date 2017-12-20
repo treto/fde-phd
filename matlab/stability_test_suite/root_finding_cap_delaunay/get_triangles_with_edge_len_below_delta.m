@@ -19,5 +19,4 @@ function [found_triangles, triangle_count] = get_triangles_with_edge_len_below_d
     end    
     triangle_count = size(found_triangles);
     triangle_count = triangle_count(1);
-    display(['get_triangles_with_edge_len_below_delta: found triangles ' num2str(triangle_count)])
 end
