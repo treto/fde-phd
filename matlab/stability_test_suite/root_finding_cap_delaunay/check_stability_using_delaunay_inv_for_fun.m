@@ -9,7 +9,7 @@
 % 
 % @retval output_is_stable  - boolean value if system is stable
 % @retval output_zeros      - list of zeros
-function [output_is_stable, output_zeros] = check_stability_using_delaunay_inversion(input_function, USE_INVERSION, USE_VERBOSE_PROFILING, USE_FILE_SAVE)
+function [output_is_stable, output_zeros] = check_stability_using_delaunay_inv_for_fun(input_function, USE_INVERSION, USE_VERBOSE_PROFILING, USE_FILE_SAVE)
 %% Algorithm control flags
 % Set this to true to use inversion (z = 1/w)
 % USE_INVERSION               = true;
