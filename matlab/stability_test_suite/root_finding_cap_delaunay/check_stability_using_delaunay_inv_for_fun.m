@@ -28,7 +28,7 @@ iter_id = 0;
 is_point_added = true;
 plot_lim = 1.1;
 % all combinations
-vert_id_combinations = combnk([1 2 3], 2);
+vert_id_combinations = combnk([1 2 3], 2)';
 tri = [];
 
 % Verifies if edge crosses any two quartiles, also if len is larger than
@@ -36,27 +36,14 @@ tri = [];
 %
 % @param edge_vertices - 2 vertices that define a single edge
 %
-% @retval point_found - true if quartiles were crossed
 % @retval new_vertice - euclidean average of two vertices on the edge
-function [point_found, new_vertice] = evaluate_edge_for_sign_change_and_len(edge_vertices)
-    point_found = true;
+function new_vertice = evaluate_edge_for_sign_change_and_len(edge_vertices)
     new_vertice = [];
     edge_vert_values = tran_fun_values(edge_vertices);
-    vert_1_val = edge_vert_values(1);
-    vert_2_val = edge_vert_values(2);
-    vert_1 = edge_vertices(1);
-    vert_2 = edge_vertices(2);
-%     if(sign(real(input_x)) ~= sign(real(input_y))) || ...
-%         ((sign(imag(input_x)) ~= sign(imag(input_y))))
-    if (is_vertices_sign_changed(vert_1_val, vert_2_val))
+    if (is_vertices_sign_changed(edge_vert_values(1), edge_vert_values(2)))
          points = V(edge_vertices, :);
-         a_point = points(1, :);
-         b_point = points(2, :);
-%          a_point = [V(vert_1, :)];
-%          b_point = [V(vert_2, :)];
-         if(sqrt((a_point(1) - b_point(1))^2 + (a_point(2) - b_point(2))^2)> min_distance_r)
-             new_vertice = [(a_point(1, 1)+b_point(1,1))/2 (a_point(1, 2)+b_point(1,2))/2];
-             point_found = true;
+         if sqrt(sum(((points(1,:) - points(2,:)).^ 2))) > min_distance_r
+             new_vertice = sum(points)/2;
          end
     end
 end
@@ -79,13 +66,13 @@ while is_point_added == true && iter_id < 10
     % for each triangle, each edge
     for triangle_id = 1:numel(tri(:, 1))
         triangle_vertice_ids = tri(triangle_id, :);
-        triangle_vertice_vals = tran_fun_values(triangle_vertice_ids);
-        is_point_added = true;
-        [a_is_point_added, a_p] = evaluate_edge_for_sign_change_and_len([triangle_vertice_ids(1) triangle_vertice_ids(2)]);
-        [b_is_point_added, b_p] = evaluate_edge_for_sign_change_and_len([triangle_vertice_ids(2) triangle_vertice_ids(3)]);
-        [c_is_point_added, c_p] = evaluate_edge_for_sign_change_and_len([triangle_vertice_ids(1) triangle_vertice_ids(3)]);
-        V = [V; a_p; b_p; c_p];
-        is_point_added = max([a_is_point_added, b_is_point_added, c_is_point_added]);
+        new_vertices = [];
+        for vertice_combination = vert_id_combinations
+            new_vertices = [new_vertices; evaluate_edge_for_sign_change_and_len(triangle_vertice_ids(vertice_combination))];
+        end
+        if ~isempty(new_vertices)
+            V = [V; new_vertices];
+        end
         is_point_added = true;
     end
 end
