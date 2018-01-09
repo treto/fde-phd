@@ -11,9 +11,9 @@
 % @retval output_zeros      - list of zeros
 function [output_is_stable, output_zeros] = check_stability_using_delaunay_inv_for_fun(input_function, USE_INVERSION, USE_VERBOSE_PROFILING, USE_FILE_SAVE)
 
-function V = initialize_starting_points(x_range, y_range)
+function a = initialize_starting_points(x_range, y_range)
     % Initializes the initial area
-    
+    a = sum(v)/n;
 end
 
 %% Auxiliary variables

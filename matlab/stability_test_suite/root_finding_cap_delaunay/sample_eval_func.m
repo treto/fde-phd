@@ -4,8 +4,10 @@
 %
 % @retval complex value
 function point = sample_eval_func(input)
+    Gz = [0.1165    0.7791    0.6549    0.2300    0.4652];
     output = 1;
-%     just some random zeros outside unit circle
-    output = output*(input - 0.5)*(input-3);
+    for i=1:numel(Gz)
+        output = output*(input - Gz(i));
+    end
     point = output;
 end
