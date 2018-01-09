@@ -10,12 +10,6 @@
 % @retval output_is_stable  - boolean value if system is stable
 % @retval output_zeros      - list of zeros
 function [output_is_stable, output_zeros] = check_stability_using_delaunay_inv_for_fun(input_function, USE_INVERSION, USE_VERBOSE_PROFILING, USE_FILE_SAVE)
-
-function a = initialize_starting_points(x_range, y_range)
-    % Initializes the initial area
-    a = sum(v)/n;
-end
-
 %% Auxiliary variables
 section_time_log = [];
 output_is_stable = true;
@@ -26,78 +20,73 @@ if USE_VERBOSE_PROFILING
     disp(section_name);
 end
 tic;
-% initialize area boundaries
-x_min = -2;
-x_max = 2;
-init_step = 0.1;
-x = x_min : init_step : x_max;
-size_x = size(x);
-% y dim is randomized, delaunay fun cannot use collinearly dependant vars
-y = 2*x_max*rand(1, size_x(2))-x_max;
-V = [x' y'];
+% init starting points for Delaunay triangulation
+V = [sin(0:0.5:2*pi)' cos(0:0.5:2*pi)'];
 % defines minimum edge length to continue triang, i.e. defines accuracy
 min_distance_r = 0.005;
 iter_id = 0;
 is_point_added = true;
-
+plot_lim = 1.1;
+% all combinations
+vert_id_combinations = combnk([1 2 3], 2);
 tri = [];
+
+% Verifies if edge crosses any two quartiles, also if len is larger than
+% resolution, if so then a point between these two vertices is returned
+%
+% @param edge_vertices - 2 vertices that define a single edge
+%
+% @retval point_found - true if quartiles were crossed
+% @retval new_vertice - euclidean average of two vertices on the edge
+function [point_found, new_vertice] = evaluate_edge_for_sign_change_and_len(edge_vertices)
+    point_found = true;
+    new_vertice = [];
+    edge_vert_values = tran_fun_values(edge_vertices);
+    vert_1_val = edge_vert_values(1);
+    vert_2_val = edge_vert_values(2);
+    vert_1 = edge_vertices(1);
+    vert_2 = edge_vertices(2);
+%     if(sign(real(input_x)) ~= sign(real(input_y))) || ...
+%         ((sign(imag(input_x)) ~= sign(imag(input_y))))
+    if (is_vertices_sign_changed(vert_1_val, vert_2_val))
+         points = V(edge_vertices, :);
+         edge_start = points(1, :);
+         edge_end   = points(2, :);
+%          a_point = [V(vert_1, :)];
+%          b_point = [V(vert_2, :)];
+         if norm(p) > min_distance_r
+             new_vertice = [(edge_start(1, 1)+edge_end(1,1))/2 (edge_start(1, 2)+edge_end(1,2))/2];
+             point_found = true;
+         end
+    end
+end
+
+% the first is never false, fix it
 while is_point_added == true && iter_id < 10
     if USE_VERBOSE_PROFILING
         display(['Iteration: ', num2str(iter_id)]);
     end
     iter_id = iter_id + 1;
     is_point_added = false;
-    point_count = numel(V)/2;
-    
-    % evaluate characteristic equation value at each vertice
+    % evaluate characteristic equation value at each triangle vertice
     % z = jw
-    % consider using "arrayfun" to speed up
-    tran_fun_values = zeros(1, point_count);
-    for point_id=1:point_count
-        tran_fun_values(point_id) = input_function(V(point_id, 1) + V(point_id, 2)*1i);
-    end
-
-    % each row in tri is a set of 3 points from vector of points(vertices) V
+    tran_fun_values = arrayfun(input_function, V(:,1) + V(:, 2)*1i);
+    % each row in tri is a triangle, made of indexes of points in V
+    % e.g tri(N) = [100 256 324]
+    % V[100] = [0.3 0.4i]
     tri = delaunay(V(:, 1), V(:, 2));
 
     % for each triangle, each edge
     for triangle_id = 1:numel(tri(:, 1))
         triangle_vertice_ids = tri(triangle_id, :);
-        a_f_val = tran_fun_values(triangle_vertice_ids(1));
-        b_f_val = tran_fun_values(triangle_vertice_ids(2));
-        c_f_val = tran_fun_values(triangle_vertice_ids(3));
-
-%       cant find roots, works with zeros though, update: ok roots with inf
-%       in the plot, there is blank space around roots
-        if(is_vertices_sign_changed(a_f_val, b_f_val))
-            %display('vertices have different signs for either imag or real parts')
-            a_point = [V(triangle_vertice_ids(1), 1) V(triangle_vertice_ids(1), 2)];
-            b_point = [V(triangle_vertice_ids(2), 1) V(triangle_vertice_ids(2), 2)];
-            if(sqrt((a_point(1) - b_point(1))^2 + (a_point(2) - b_point(2))^2)> min_distance_r)
-                V = [V; [(a_point(1, 1)+b_point(1,1))/2 (a_point(1, 2)+b_point(1,2))/2]];
-                is_point_added = true;
-            end
-        end
-
-        if(is_vertices_sign_changed(a_f_val, c_f_val))
-%             display('vertices have different signs for either imag or real parts')
-            a_point = [V(triangle_vertice_ids(1), 1) V(triangle_vertice_ids(1), 2)];
-            c_point = [V(triangle_vertice_ids(3), 1) V(triangle_vertice_ids(3), 2)];
-            if(sqrt((a_point(1) - c_point(1))^2 + (a_point(2) - c_point(2))^2)> min_distance_r)
-                V = [V; [(a_point(1, 1)+c_point(1,1))/2 (a_point(1, 2)+c_point(1,2))/2]];
-                is_point_added = true;
-            end
-        end
-        
-        if(is_vertices_sign_changed(b_f_val, c_f_val))
-%             display('vertices have different signs for either imag or real parts')
-            b_point = [V(triangle_vertice_ids(2), 1) V(triangle_vertice_ids(2), 2)];
-            c_point = [V(triangle_vertice_ids(3), 1) V(triangle_vertice_ids(3), 2)];
-            if(sqrt((c_point(1) - b_point(1))^2 + (c_point(2) - b_point(2))^2)> min_distance_r)
-                V = [V; [(b_point(1, 1)+c_point(1,1))/2 (b_point(1, 2)+c_point(1,2))/2]];
-                is_point_added = true;
-            end
-        end
+        triangle_vertice_vals = tran_fun_values(triangle_vertice_ids);
+        is_point_added = true;
+        [a_is_point_added, a_p] = evaluate_edge_for_sign_change_and_len([triangle_vertice_ids(1) triangle_vertice_ids(2)]);
+        [b_is_point_added, b_p] = evaluate_edge_for_sign_change_and_len([triangle_vertice_ids(2) triangle_vertice_ids(3)]);
+        [c_is_point_added, c_p] = evaluate_edge_for_sign_change_and_len([triangle_vertice_ids(1) triangle_vertice_ids(3)]);
+        V = [V; a_p; b_p; c_p];
+        is_point_added = max([a_is_point_added, b_is_point_added, c_is_point_added]);
+        is_point_added = true;
     end
 end
 
@@ -238,23 +227,30 @@ if(USE_VERBOSE_PROFILING)
     figure1=figure('Position', [0, 0, 1800, 1024]);
     subplot(row_count, col_count, [1])
     triplot(tri, V(:, 1), V(:, 2));
+    xlim([-plot_lim plot_lim])
+    ylim([-plot_lim plot_lim])
     title('Delaunay triangulation')
     hold on
-
+    aux_x = 0:0.05:2*pi;
+    plot(sin(aux_x), cos(aux_x));
     if(numel(C_r) > 0)
         subplot(row_count, col_count, 2)
         scatter(C_r(:, 1), C_r(:, 2), 'g.')
         title('real(f_z) = 0 (C_r)')
-        xlim([-2 2])
-        ylim([-2 2])
+        xlim([-plot_lim plot_lim])
+        ylim([-plot_lim plot_lim])
+        hold on
+        plot(sin(aux_x), cos(aux_x), 'k');
     end
 
     if(numel(C_i) > 0)
         subplot(row_count, col_count, 3)
         scatter(C_i(:, 1), C_i(:, 2), 'y.')
         title('imag(f_z) = 0 (C_r)')
-        xlim([-2 2])
-        ylim([-2 2])
+        xlim([-plot_lim plot_lim])
+        ylim([-plot_lim plot_lim])
+        hold on 
+        plot(sin(aux_x), cos(aux_x), 'k');
     end
     
     subplot(row_count, col_count, 4)
@@ -264,8 +260,10 @@ if(USE_VERBOSE_PROFILING)
     if(numel(C_cross) > 0)
         scatter(C_cross(:, 1), C_cross(:, 2), 'b.', 'SizeData', 48)
     end
-    xlim([-2 2])
-    ylim([-2 2])
+    xlim([-plot_lim plot_lim])
+    ylim([-plot_lim plot_lim])
+    hold on
+    plot(sin(aux_x), cos(aux_x), 'k');
 
     % Draw all triangles with low edge length, these are then evaluated for
     % zeros or poles using phase count
@@ -274,8 +272,9 @@ if(USE_VERBOSE_PROFILING)
     hold on
 %     scatter(real(Gz_zeros), imag(Gz_zeros), 'ro', 'SizeData',48);   
     title('Triangles low edge length (near zeros)')
-    xlim([-2 2])
-    ylim([-2 2])
+    xlim([-plot_lim plot_lim])
+    ylim([-plot_lim plot_lim])
+    plot(sin(aux_x), cos(aux_x), 'k');
 
     % Draw poles/zeros of the transfer functions and points located using
     % evaluation
@@ -285,8 +284,9 @@ if(USE_VERBOSE_PROFILING)
     scatter(real(pole_points),imag(pole_points), 'gx', 'SizeData',48);    
 %     scatter(real(Gz_zeros), imag(Gz_zeros), 'ro', 'SizeData',48);   
     title('Triangles around zeros')
-    xlim([-2 2])
-    ylim([-2 2])
+    xlim([-plot_lim plot_lim])
+    ylim([-plot_lim plot_lim])
+    plot(sin(aux_x), cos(aux_x), 'k');
 
     duration = toc;
     section_time_log = [section_time_log [section_name duration]];
