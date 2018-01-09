@@ -23,7 +23,7 @@ tic;
 % init starting points for Delaunay triangulation
 V = [sin(0:0.5:2*pi)' cos(0:0.5:2*pi)'];
 % defines minimum edge length to continue triang, i.e. defines accuracy
-min_distance_r = 0.005;
+min_distance_r = 0.05;
 iter_id = 0;
 is_point_added = true;
 plot_lim = 1.1;
@@ -43,13 +43,18 @@ function new_vertice = evaluate_edge_for_sign_change_and_len(edge_vertices)
     if (is_vertices_sign_changed(edge_vert_values(1), edge_vert_values(2)))
          points = V(edge_vertices, :);
          if sqrt(sum(((points(1,:) - points(2,:)).^ 2))) > min_distance_r
+%              disp('iteration in ev edge');
+             points(1,:);
+             points(2,:);
+             sqrt(sum(((points(1,:) - points(2,:)).^ 2)));
              new_vertice = sum(points)/2;
          end
+%          else
     end
 end
 
 % the first is never false, fix it
-while is_point_added == true && iter_id < 10
+while is_point_added == true% && iter_id < 10
     if USE_VERBOSE_PROFILING
         display(['Iteration: ', num2str(iter_id)]);
     end
@@ -62,7 +67,9 @@ while is_point_added == true && iter_id < 10
     % e.g tri(N) = [100 256 324]
     % V[100] = [0.3 0.4i]
     tri = delaunay(V(:, 1), V(:, 2));
+    numel(tri)
 
+    V_new = [];
     % for each triangle, each edge
     for triangle_id = 1:numel(tri(:, 1))
         triangle_vertice_ids = tri(triangle_id, :);
@@ -71,10 +78,20 @@ while is_point_added == true && iter_id < 10
             new_vertices = [new_vertices; evaluate_edge_for_sign_change_and_len(triangle_vertice_ids(vertice_combination))];
         end
         if ~isempty(new_vertices)
+            is_point_added = true;
+%             display('not empty!');
+            V_new = [V_new; new_vertices];
             V = [V; new_vertices];
+            V((end-10):end)
         end
-        is_point_added = true;
+%         is_point_added = true;
     end
+    disp(['Total number of vertices: ' num2str(numel(V))]);
+%     disp(['New vertices: ' num2str(new_vertices)]);
+%     V_new
+    triplot(tri, V(:, 1), V(:, 2));
+    pause(1);
+%     system pause
 end
 
 duration = toc;
@@ -90,7 +107,8 @@ if USE_VERBOSE_PROFILING
 end
 tic;
 % Curves
-eps = 2*min_distance_r;
+% min_distance_r = 0.005;
+% eps = 2*min_distance_r;
 C_r = [];
 C_i = [];
 C_cross = [];
@@ -252,6 +270,9 @@ if(USE_VERBOSE_PROFILING)
     hold on
     plot(sin(aux_x), cos(aux_x), 'k');
 
+ %TODO: once we identify new vertices that were added, we should add a
+ %distinctive color to those, so that we can draw how algorithm converges
+ %to poles
     % Draw all triangles with low edge length, these are then evaluated for
     % zeros or poles using phase count
     subplot(row_count, col_count, 5)
