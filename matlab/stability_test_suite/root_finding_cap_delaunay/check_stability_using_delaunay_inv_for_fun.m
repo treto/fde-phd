@@ -14,7 +14,6 @@ close all
 %% Auxiliary variables
 section_time_log = [];
 output_is_stable = true;
-output_zeros = [];
 local_colormap = hsv(256); %colormap
 %% Delaunay 
 section_name = 'Section: Delaunay triangulation';
@@ -25,7 +24,9 @@ tic;
 % init starting points for Delaunay triangulation
 %TODO: there is a possibility that a point on the unit circle will be
 %ignored (as circle is approxiamted using limited number of segments)
-V = [sin(0:0.5:2*pi)' cos(0:0.5:2*pi)'];
+%ISSUE2: for some reason, changing this by reducing number of points can
+%cause the algorithm not to converge on some zeros
+V = [sin(0:0.05:2*pi)' cos(0:0.05:2*pi)'];
 % defines minimum edge length to continue triang, i.e. defines accuracy
 min_distance_r = eps;
 
@@ -111,7 +112,7 @@ while (1) % if added any new triangle in this iteration
          disp(['Vertices (all): ' num2str(numel(V))]);
          disp(['Vertices (used by delaunay): ' num2str(numel(tri))]);
     end
-    plot_delaunay_convergence(tri, V, V_new, iter_id);
+%     plot_delaunay_convergence(tri, V, V_new, iter_id);
 end
 
 duration = toc;
