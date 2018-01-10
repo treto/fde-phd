@@ -150,3 +150,9 @@ timestamp,13:19:13.059,is_stable,0,duration,-1,zeros,0.25-3.6279e-17i,0.1+8.5888
 timestamp,13:19:34.115,is_stable,0,duration,-1,zeros,0.75-2.614e-17i,0.45-2.1421e-17i
 timestamp,13:19:45.896,is_stable,0,duration,-1,zeros,0.25-3.6279e-17i,0.1+8.5888e-18i,0.65-3.0267e-17i,0.75-2.7149e-17i,0.45-5.9819e-17i
 timestamp,13:20:21.438,is_stable,0,duration,-1,zeros,0.25-3.6279e-17i,0.1+8.5888e-18i,0.65-3.0267e-17i,0.75-2.7149e-17i,0.45-5.9819e-17i
+timestamp,13:21:54.767,is_stable,0,duration,-1,zeros,-0.3-1.3643e-16i,0.25-7.016e-18i,0.75+4.1334e-17i
+timestamp,13:47:57.971,is_stable,0,duration,-1,zeros,-0.3-1.3643e-16i,0.25-7.016e-18i,0.75+4.1334e-17i
+timestamp,13:48:23.850,is_stable,0,duration,-1,zeros,0.5+5.224e-17i
+timestamp,13:49:23.405,is_stable,0,duration,-1,zeros,0.5-6.4572e-17i
+timestamp,13:49:30.629,is_stable,0,duration,-1,zeros,0.25-0.5i,0.25+0.5i,0.5+9.1123e-17i
+timestamp,13:49:47.083,is_stable,0,duration,-1,zeros,0.25-0.5i,0.25+0.5i,0.5+9.1123e-17i

@@ -2,14 +2,12 @@
 %
 % @param input_function     - input complex function to evaluate for
 % stability
-% @param USE_INVERSION      - boolean value specifying if z = 1/w should be
-% used, note: only currently supported mode
 % @param USE_VERBOSE_PROFILING - adds lots of profiling info and plots
 % @param USE_FILE_SAVE      - saves output to .csv file
 % 
 % @retval output_is_stable  - boolean value if system is stable
 % @retval output_zeros      - list of zeros
-function [output_is_stable, output_zeros] = check_stability_using_delaunay_inv_for_fun(input_function, USE_INVERSION, USE_VERBOSE_PROFILING, USE_FILE_SAVE)
+function [output_is_stable, output_zeros] = check_stability_using_delaunay_inv_for_fun(input_function, USE_VERBOSE_PROFILING, USE_FILE_SAVE)
 close all
 %% Auxiliary variables
 section_time_log = [];
@@ -26,7 +24,7 @@ tic;
 %ignored (as circle is approxiamted using limited number of segments)
 %ISSUE2: for some reason, changing this by reducing number of points can
 %cause the algorithm not to converge on some zeros
-V = [sin(0:0.05:2*pi)' cos(0:0.05:2*pi)'];
+V = [sin(0:0.5:2*pi)' cos(0:0.5:2*pi)'];
 % defines minimum edge length to continue triang, i.e. defines accuracy
 min_distance_r = eps;
 
@@ -112,7 +110,7 @@ while (1) % if added any new triangle in this iteration
          disp(['Vertices (all): ' num2str(numel(V))]);
          disp(['Vertices (used by delaunay): ' num2str(numel(tri))]);
     end
-%     plot_delaunay_convergence(tri, V, V_new, iter_id);
+    plot_delaunay_convergence(tri, V, V_new, iter_id);
 end
 
 duration = toc;
@@ -210,19 +208,10 @@ tic;
 distance_from_origin_for_poles = abs(output_zeros);
 if USE_VERBOSE_PROFILING
     disp(['Located system zeros: ' num2str(output_zeros)]);
-    if USE_INVERSION == true
-        if min(distance_from_origin_for_poles) < 1
-            disp('The system is unstable, one of the inverted zeros lays inside the unit circle')
-        else
-            disp('The system is stable, none of the inverted zeros lay inside the unit circle')
-        end
-  
+    if min(distance_from_origin_for_poles) < 1
+        disp('The system is unstable, one of the inverted zeros lays inside the unit circle')
     else
-        if min(distance_from_origin_for_poles > 1)
-            disp('The system is stable, all regular zeros are outside unit circle')
-        else
-            disp('The system is unstable, one of the regular zeros is inside the unit circle')
-        end
+        disp('The system is stable, none of the inverted zeros lay inside the unit circle')
     end
 end
 duration = toc;
