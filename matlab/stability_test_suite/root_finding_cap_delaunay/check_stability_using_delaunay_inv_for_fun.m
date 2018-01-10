@@ -110,7 +110,9 @@ while (1) % if added any new triangle in this iteration
          disp(['Vertices (all): ' num2str(numel(V))]);
          disp(['Vertices (used by delaunay): ' num2str(numel(tri))]);
     end
-    plot_delaunay_convergence(tri, V, V_new, iter_id);
+    if ~isempty(V_new)
+        plot_delaunay_convergence(tri, V, V_new, iter_id);
+    end
 end
 
 duration = toc;
@@ -297,9 +299,31 @@ if(USE_VERBOSE_PROFILING)
 
     duration = toc;
     section_time_log = [section_time_log [section_name duration]];
+    
+    
+    x = -1:0.01:1;
+    f_abs = abs(arrayfun(input_function, x + x'*1i));
+    f_ang = angle(arrayfun(input_function, x + x'*1i));
+    subplot(row_count, col_count, 2)
+    h = surf(x, x, f_abs);
+    set(h,'LineStyle','none')
+    title('Function absolute value')
+    xlim([-plot_lim plot_lim])
+    ylim([-plot_lim plot_lim])
+    colorbar
+    
+    subplot(row_count, col_count, 3)
+    h = surf(x, x, f_ang);
+    set(h,'LineStyle','none')
+    title('Function argument value')
+    xlim([-plot_lim plot_lim])
+    ylim([-plot_lim plot_lim])
+    colorbar
+    
     if USE_VERBOSE_PROFILING
         disp(['Section time: ' num2str(duration)]);
     end
+    
 end
 if USE_FILE_SAVE
    write_delaunay_output(output_is_stable, -1, output_zeros);
