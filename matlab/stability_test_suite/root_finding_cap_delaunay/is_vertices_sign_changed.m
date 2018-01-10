@@ -6,6 +6,6 @@
 %
 % @retval boolean value, true if sign changed, false otherwise
 function is_sign_changed = is_vertices_sign_changed(input_x, input_y)
-    is_sign_changed = (sign(real(input_x)) ~= sign(real(input_y))) || ...
+    is_sign_changed = (sign(real(input_x)) ~= sign(real(input_y))) && ...
         ((sign(imag(input_x)) ~= sign(imag(input_y))));
 end

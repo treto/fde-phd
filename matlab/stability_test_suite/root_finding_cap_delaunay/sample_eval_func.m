@@ -4,7 +4,8 @@
 %
 % @retval complex value
 function point = sample_eval_func(input)
-    Gz = [0.1165    0.7791    0.6549    0.2300    0.4652];
+%     Gz = [0.1165    0.7791    0.6549    0.2300    0.4652];
+    Gz = [0.5   0.25+0.5i 0.25-0.5i];
     output = 1;
     for i=1:numel(Gz)
         output = output*(input - Gz(i));
