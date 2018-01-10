@@ -27,7 +27,7 @@ tic;
 %ignored (as circle is approxiamted using limited number of segments)
 V = [sin(0:0.5:2*pi)' cos(0:0.5:2*pi)'];
 % defines minimum edge length to continue triang, i.e. defines accuracy
-min_distance_r = 0.00000000001;
+min_distance_r = eps;
 
 % Verifies if edge crosses any two quartiles, also if len is larger than
 % resolution, if so then a point between these two vertices is returned
@@ -166,7 +166,7 @@ if USE_VERBOSE_PROFILING
     display(['get_triangles_with_edge_len_below_delta: found triangles ' num2str(triangle_count)])
 end
 final_triangles = [];
-pole_points = [];
+output_zeros = [];
 singularities = [];
 % For each triangle, calculate phase change based on the vertices
 for triangle_id = 1:triangle_count
@@ -177,9 +177,8 @@ for triangle_id = 1:triangle_count
          phase_change = calculate_phase_change_for_triangle_given_fun(input_function, V(triangle_vertices, :), eps);
        if(phase_change >= 1)
            final_triangles = [final_triangles; triangles_near_zeros(triangle_id,:)];
-           pole_points = [pole_points triangle_gravity_center];
+           output_zeros = [output_zeros triangle_gravity_center];
            output_is_stable = false;
-           output_zeros = pole_points;
            if(USE_VERBOSE_PROFILING == false)
                if USE_FILE_SAVE
                    write_delaunay_output(output_is_stable, -1, output_zeros);
@@ -193,10 +192,9 @@ for triangle_id = 1:triangle_count
 end
 
 if USE_VERBOSE_PROFILING
-    display(['Zero candidates count: ' num2str(numel(pole_points))])
+    display(['Zero candidates count: ' num2str(numel(output_zeros))])
     display(['Singularities candidates count: ' num2str(numel(singularities))])
 end
-
 duration = toc;
 section_time_log = [section_time_log [section_name duration]];
 if USE_VERBOSE_PROFILING
@@ -208,8 +206,9 @@ if USE_VERBOSE_PROFILING
     disp(section_name);
 end
 tic;
-distance_from_origin_for_poles = abs(pole_points);
+distance_from_origin_for_poles = abs(output_zeros);
 if USE_VERBOSE_PROFILING
+    disp(['Located system zeros: ' num2str(output_zeros)]);
     if USE_INVERSION == true
         if min(distance_from_origin_for_poles) < 1
             disp('The system is unstable, one of the inverted zeros lays inside the unit circle')
@@ -299,7 +298,7 @@ if(USE_VERBOSE_PROFILING)
     subplot(row_count, col_count, 6)
     scatter(real(singularities),imag(singularities), 'go', 'SizeData',48);  
     hold on
-    scatter(real(pole_points),imag(pole_points), 'gx', 'SizeData',48);    
+    scatter(real(output_zeros),imag(output_zeros), 'gx', 'SizeData',48);    
 %     scatter(real(Gz_zeros), imag(Gz_zeros), 'ro', 'SizeData',48);   
     title('Triangles around zeros')
     xlim([-plot_lim plot_lim])
