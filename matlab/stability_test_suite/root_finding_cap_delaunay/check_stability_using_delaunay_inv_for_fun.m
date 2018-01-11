@@ -52,9 +52,10 @@ end
 
 function new_vertice = add_new_vertice_based_on_triangle_phase(triangle_vertices)
     new_vertice = [];
+    triangle_vertices
     phase_change = calculate_phase_change_for_triangle_given_fun(input_function, triangle_vertices, eps);
     if phase_change >= 1
-        new_vertice = sum(V(triangle_vertices, 1))/3 + sum(V(triangle_vertices, 2))*1i/3;
+        new_vertice = sum(triangle_vertices(:, 1)/3 + sum(triangle_vertices, 2))*1i/3;
     end
 end
 
@@ -103,20 +104,26 @@ while (1) % if added any new triangle in this iteration
     % for each triangle, each edge
     for triangle_id = 1:numel(tri(:, 1))
         triangle_vertice_ids = tri(triangle_id, :);
-        new_vertices = [];
-        for vertice_combination = vert_id_combinations
-            new_vert = evaluate_edge_for_sign_change_and_len(triangle_vertice_ids(vertice_combination));
-            if ~isempty(new_vert)
-                new_vertices = [new_vertices; new_vert];
-                % TODO: how to only use new vertices?
-%                 new_vertices = [new_vertices; new_vert; V(triangle_vertice_ids(vertice_combination), :)];
-            end
-            
-        end
-        if ~isempty(new_vertices)
-            V_new = [V_new; new_vertices];
-            V = [V; new_vertices];
-        end
+        new_vert = add_new_vertice_based_on_triangle_phase(V(triangle_vertice_ids, :));
+%         if ~isempty(new_vert)
+%             new_vertices = [new_vertices; new_vert];
+%             TODO: how to only use new vertices?
+%             new_vertices = [new_vertices; new_vert; V(triangle_vertice_ids(vertice_combination), :)];
+%         end
+%         new_vertices = [];
+%         for vertice_combination = vert_id_combinations
+%             new_vert = evaluate_edge_for_sign_change_and_len(triangle_vertice_ids(vertice_combination));
+%             if ~isempty(new_vert)
+%                 new_vertices = [new_vertices; new_vert];
+%                 % TODO: how to only use new vertices?
+% %                 new_vertices = [new_vertices; new_vert; V(triangle_vertice_ids(vertice_combination), :)];
+%             end
+%             
+%         end
+%         if ~isempty(new_vert)
+            V_new = [V_new; new_vert];
+            V = [V; new_vert];
+%         end
     end
     
     if USE_VERBOSE_PROFILING
