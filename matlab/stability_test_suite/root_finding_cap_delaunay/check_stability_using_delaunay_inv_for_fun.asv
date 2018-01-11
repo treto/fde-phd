@@ -30,10 +30,15 @@ min_distance_r = eps;
 
 % Verifies if edge crosses any two quartiles, also if len is larger than
 % resolution, if so then a point between these two vertices is returned
+% This is, in a way, gradient descent-like approach
 %
 % @param edge_vertices - 2 vertices that define a single edge
 %
 % @retval new_vertice - euclidean average of two vertices on the edge
+% ISSUE: Algorithm can sometimes overshoot a zero if there are zeroes
+% close, it will not converge to that zero afterwards
+% TODO: Consider adding a point to the middle of a triangle, and not an
+% edge, if total phase change in a triangle indicates there is a zero in it
 function new_vertice = evaluate_edge_for_sign_change_and_len(edge_vertices)
     new_vertice = [];
     edge_vert_values = tran_fun_values(edge_vertices);
@@ -44,6 +49,9 @@ function new_vertice = evaluate_edge_for_sign_change_and_len(edge_vertices)
          end
     end
 end
+
+
+
 
 function plot_delaunay_convergence(tri, V, V_new, iteration)
      triplot(tri, V(:, 1), V(:, 2), 'color', local_colormap(iteration,:));
@@ -110,7 +118,9 @@ while (1) % if added any new triangle in this iteration
          disp(['Vertices (all): ' num2str(numel(V))]);
          disp(['Vertices (used by delaunay): ' num2str(numel(tri))]);
     end
-    plot_delaunay_convergence(tri, V, V_new, iter_id);
+    if ~isempty(V_new)
+        plot_delaunay_convergence(tri, V, V_new, iter_id);
+    end
 end
 
 duration = toc;
@@ -299,17 +309,30 @@ if(USE_VERBOSE_PROFILING)
     section_time_log = [section_time_log [section_name duration]];
     
     
+    x = -1:0.01:1;
+    f_abs = abs(arrayfun(input_function, x + x'*1i));
+    f_ang = angle(arrayfun(input_function, x + x'*1i));
     subplot(row_count, col_count, 2)
-    x = -1:0.05:1;
-    f = abs(arrayfun(@sample_eval_func, x + x'*1i));
-    surf(x, x, f);
+    h = surf(x, x, f_abs);
+    set(h,'LineStyle','none')
     title('Function absolute value')
     xlim([-plot_lim plot_lim])
     ylim([-plot_lim plot_lim])
+    colorbar
+    
+    subplot(row_count, col_count, 3)
+    h = surf(x, x, f_ang);
+    set(h,'LineStyle','none')
+    title('Function argument value')
+    xlim([-plot_lim plot_lim])
+    ylim([-plot_lim plot_lim])
+    colorbar
+    hold on
+    triplot(tri, V(:, 1), V(:, 2), 'color', 'k');
+    
     if USE_VERBOSE_PROFILING
         disp(['Section time: ' num2str(duration)]);
     end
-    
     
 end
 if USE_FILE_SAVE

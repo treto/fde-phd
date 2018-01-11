@@ -30,10 +30,15 @@ min_distance_r = eps;
 
 % Verifies if edge crosses any two quartiles, also if len is larger than
 % resolution, if so then a point between these two vertices is returned
+% This is, in a way, gradient descent-like approach
 %
 % @param edge_vertices - 2 vertices that define a single edge
 %
 % @retval new_vertice - euclidean average of two vertices on the edge
+% ISSUE: Algorithm can sometimes overshoot a zero if there are zeroes
+% close, it will not converge to that zero afterwards
+% TODO: Consider adding a point to the middle of a triangle, and not an
+% edge, if total phase change in a triangle indicates there is a zero in it
 function new_vertice = evaluate_edge_for_sign_change_and_len(edge_vertices)
     new_vertice = [];
     edge_vert_values = tran_fun_values(edge_vertices);
@@ -42,6 +47,14 @@ function new_vertice = evaluate_edge_for_sign_change_and_len(edge_vertices)
          if sqrt(sum(((points(1,:) - points(2,:)).^ 2))) > min_distance_r
              new_vertice = sum(points)/2;
          end
+    end
+end
+
+function new_vertice = add_new_vertice_based_on_triangle_phase(triangle_vertices)
+    new_vertice = [];
+    phase_change = calculate_phase_change_for_triangle_given_fun(input_function, triangle_vertices, eps);
+    if phase_change >= 1
+        new_vertice = sum(V(triangle_vertices, 1))/3 + sum(V(triangle_vertices, 2))*1i/3;
     end
 end
 
@@ -319,6 +332,8 @@ if(USE_VERBOSE_PROFILING)
     xlim([-plot_lim plot_lim])
     ylim([-plot_lim plot_lim])
     colorbar
+    hold on
+    triplot(tri, V(:, 1), V(:, 2), 'color', 'k');
     
     if USE_VERBOSE_PROFILING
         disp(['Section time: ' num2str(duration)]);

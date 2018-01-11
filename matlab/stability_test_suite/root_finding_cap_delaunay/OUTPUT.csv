@@ -184,3 +184,6 @@ timestamp,16:15:35.617,is_stable,0,duration,-1,zeros,-0.3+5.189e-17i,0.45-4.0321
 timestamp,16:16:22.956,is_stable,0,duration,-1,zeros,0.25-0.5i,0.25+0.5i,0.5+9.1123e-17i
 timestamp,16:16:29.048,is_stable,0,duration,-1,zeros,0.25-0.5i,0.25+0.5i,0.5+9.1123e-17i
 timestamp,16:16:49.904,is_stable,0,duration,-1,zeros,0.25-0.5i,0.25+0.5i,0.5+9.1123e-17i
+timestamp,17:15:32.170,is_stable,0,duration,-1,zeros,0.25-0.5i,0.25+0.5i,0.5+9.1123e-17i
+timestamp,17:19:40.832,is_stable,0,duration,-1,zeros,-0.3+5.189e-17i,0.45-4.0321e-17i
+timestamp,17:23:36.511,is_stable,0,duration,-1,zeros,-0.3+5.189e-17i,0.45-4.0321e-17i
