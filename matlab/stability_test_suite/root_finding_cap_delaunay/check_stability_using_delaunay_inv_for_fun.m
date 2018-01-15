@@ -3,11 +3,13 @@
 % @param input_function     - input complex function to evaluate for
 % stability
 % @param USE_VERBOSE_PROFILING - adds lots of profiling info and plots
-% @param USE_FILE_SAVE      - saves output to .csv file
+% @param USE_FILE_SAVE         - saves output to .csv file
+% @param USE_EARLY_QUIT        - algorithm stops as soon as a single zero
+% is located
 % 
 % @retval output_is_stable  - boolean value if system is stable
 % @retval output_zeros      - list of zeros
-function [output_is_stable, output_zeros] = check_stability_using_delaunay_inv_for_fun(input_function, USE_VERBOSE_PROFILING, USE_FILE_SAVE)
+function [output_is_stable, output_zeros] = check_stability_using_delaunay_inv_for_fun(input_function, USE_VERBOSE_PROFILING, USE_FILE_SAVE, USE_EARLY_QUIT)
 close all
 %% Auxiliary variables
 section_time_log = [];
@@ -114,6 +116,7 @@ while (1) % if added any new triangle in this iteration
             
         end
         if ~isempty(new_vertices)
+%             triangle_gravity_center = [sum(V(triangle_vertice_ids, 1))/3 sum(V(triangle_vertice_ids, 2))/3];
             V_new = [V_new; new_vertices];
             V = [V; new_vertices];
         end
@@ -193,17 +196,22 @@ for triangle_id = 1:triangle_count
            final_triangles = [final_triangles; triangles_near_zeros(triangle_id,:)];
            output_zeros = [output_zeros triangle_gravity_center];
            output_is_stable = false;
-           if(USE_VERBOSE_PROFILING == false)
-               if USE_FILE_SAVE
-                   write_delaunay_output(output_is_stable, -1, output_zeros);
-               end
-               return
+           if USE_EARLY_QUIT
+                if USE_FILE_SAVE
+                    write_delaunay_output(output_is_stable, -1, output_zeros);
+                end
+                if USE_VERBOSE_PROFILING
+                   display(['(Early quit) Zero found at: ' num2str(output_zeros)]);
+                end
+                return
            end
        elseif(phase_change <= -1)
            singularities = [singularities triangle_gravity_center];
        end
    end
 end
+
+
 
 if USE_VERBOSE_PROFILING
     display(['Zero candidates count: ' num2str(numel(output_zeros))])

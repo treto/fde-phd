@@ -2,16 +2,12 @@ close all
 clc
 clear all
 
-x = -1:0.06:1;
+zeros = [0.5-9.9855e-17i          0.5+4.3992e-17i          0.5+8.8544e-17i];
+diff_zeros = zeros - zeros';
+diff_zeros(abs(diff_zeros) < eps)
 
-circle_input = x + x'*1i;
-% circle_input = circle_input(abs(circle_input < 1));
-f = abs(arrayfun(@sample_eval_func, x + x'*1i));
-% for x_inp=x
-%     for y_inp=y
-%         f = sample_eval_func(x + x*1i);
-%     end
-% end
-% 
-% mgrid = meshgrid(x,x);
-surf(x, x, f);
+zero_id = 0;
+while ~isempty(zeros) && zero_id < (numel(zeros)+1)
+    
+    
+    
