@@ -201,7 +201,7 @@ for triangle_id = 1:triangle_count
                     write_delaunay_output(output_is_stable, -1, output_zeros);
                 end
                 if USE_VERBOSE_PROFILING
-                   display(['(Early quit) Zero found at: ' num2str(output_zeros)]);
+                   display(['(Early quit) system is unstale, zero found at: ' num2str(output_zeros)]);
                 end
                 return
            end
