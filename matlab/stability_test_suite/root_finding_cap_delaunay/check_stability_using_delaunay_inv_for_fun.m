@@ -22,11 +22,17 @@ if USE_VERBOSE_PROFILING
 end
 tic;
 % init starting points for Delaunay triangulation
-%TODO: there is a possibility that a point on the unit circle will be
-%ignored (as circle is approxiamted using limited number of segments)
 %ISSUE2: for some reason, changing this by reducing number of points can
 %cause the algorithm not to converge on some zeros
-V = [sin(0:0.5:2*pi)' cos(0:0.5:2*pi)'];
+number_of_init_points = 12;
+step_init = (2*pi)/number_of_init_points;
+V = [sin(0:step_init:2*pi)' cos(0:step_init:2*pi)'];
+%As circle is approximated, we need to multiply to ensure that unit circle
+%is inside the approximation
+mid_point = (V(1,:) + V(2,:))/2;
+distance = sqrt(mid_point(1)^2 + mid_point(2)^2);
+multiplier = 1/distance; 
+V = V*multiplier;
 % defines minimum edge length to continue triang, i.e. defines accuracy
 min_distance_r = eps*1000;
 
@@ -199,7 +205,7 @@ for triangle_id = 1:triangle_count
 %          TODO: depending on the direction, the argument may sum up to -1
 %          or 1, the sign depends on this, so possibly should switch to
 %          abs(phase_change) instead
-       if(abs(phase_change) >= 1)
+       if(phase_change >= (1 - min_distance_r))
            final_triangles = [final_triangles; triangles_near_zeros(triangle_id,:)];
            golden_triangles = [golden_triangles; V(triangle_vertices, :)];
 %            multiplicity = log2(phase_change); #Is it log2 or just
@@ -270,7 +276,7 @@ if(USE_VERBOSE_PROFILING)
     ylim([-plot_lim plot_lim])
     title('Delaunay triangulation')
     hold on
-    aux_x = 0:0.05:2*pi;
+    aux_x = 0:0.05:(2*pi+0.05);
     plot(sin(aux_x), cos(aux_x));
     if(numel(C_r) > 0)
         subplot(row_count, col_count, 2)
@@ -329,10 +335,6 @@ if(USE_VERBOSE_PROFILING)
     xlim([-plot_lim plot_lim])
     ylim([-plot_lim plot_lim])
     plot(sin(aux_x), cos(aux_x), 'k');
-    plot(golden_triangles(:, 1), golden_triangles(:, 2))
-    multip = 100*eps;
-    xlim([0.5 - multip 0.5 + multip])
-    ylim([0.0 - multip 0.0 + multip])
 
     duration = toc;
     section_time_log = [section_time_log [section_name duration]];

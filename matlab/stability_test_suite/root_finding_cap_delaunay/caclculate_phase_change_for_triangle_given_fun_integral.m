@@ -13,7 +13,8 @@ edge_points = [edge_points; [(vert(3,1) + diff_v(1)*x)'  (vert(3,2) + diff_v(2)*
 ang_sum = 0;
 
 % Ensure that clockwise direction is used, if not - then just change sign
-if(angle(sample_eval_func(complex(edge_points(2, 1), edge_points(2,2)))/sample_eval_func(complex(edge_points(1, 1), edge_points(1,2)))) > 0)
+first_phase_diff = angle(sample_eval_func(complex(edge_points(2, 1), edge_points(2,2)))/sample_eval_func(complex(edge_points(1, 1), edge_points(1,2))));
+if((first_phase_diff > 0) || (first_phase_diff > -pi))
     sign = 1;
 else 
     sign = -1;
