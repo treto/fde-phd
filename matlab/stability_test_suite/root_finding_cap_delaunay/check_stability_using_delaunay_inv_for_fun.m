@@ -28,7 +28,7 @@ tic;
 %cause the algorithm not to converge on some zeros
 V = [sin(0:0.5:2*pi)' cos(0:0.5:2*pi)'];
 % defines minimum edge length to continue triang, i.e. defines accuracy
-min_distance_r = eps;
+min_distance_r = eps*1000;
 
 % Verifies if edge crosses any two quartiles, also if len is larger than
 % resolution, if so then a point between these two vertices is returned
@@ -54,7 +54,8 @@ end
 
 function new_vertice = add_new_vertice_based_on_triangle_phase(triangle_vertices)
     new_vertice = [];
-    phase_change = calculate_phase_change_for_triangle_given_fun(input_function, triangle_vertices, eps);
+%     phase_change = calculate_phase_change_for_triangle_given_fun(input_function, triangle_vertices, eps);
+    phase_change = caclculate_phase_change_for_triangle_given_fun_integral(input_function, triangle_vertices, eps);
     if phase_change >= 1
         new_vertice = sum(V(triangle_vertices, 1))/3 + sum(V(triangle_vertices, 2))*1i/3;
     end
@@ -185,20 +186,30 @@ end
 final_triangles = [];
 output_zeros = [];
 singularities = [];
+multiplicities = [];
+golden_triangles = [];
 % For each triangle, calculate phase change based on the vertices
 for triangle_id = 1:triangle_count
    triangle_vertices = triangles_near_zeros(triangle_id, :);
    triangle_gravity_center = sum(V(triangle_vertices, 1))/3 + sum(V(triangle_vertices, 2))*1i/3;
    if(abs(triangle_gravity_center) < 1)
 %        Only searches for zeros inside the unit circle
-         phase_change = calculate_phase_change_for_triangle_given_fun(input_function, V(triangle_vertices, :), eps);
-       if(phase_change >= 1)
+%          phase_change = calculate_phase_change_for_triangle_given_fun(input_function, V(triangle_vertices, :), eps);
+         phase_change = caclculate_phase_change_for_triangle_given_fun_integral(input_function, V(triangle_vertices, :), 0.0001);
+%          TODO: depending on the direction, the argument may sum up to -1
+%          or 1, the sign depends on this, so possibly should switch to
+%          abs(phase_change) instead
+       if(abs(phase_change) >= 1)
            final_triangles = [final_triangles; triangles_near_zeros(triangle_id,:)];
+           golden_triangles = [golden_triangles; V(triangle_vertices, :)];
+%            multiplicity = log2(phase_change); #Is it log2 or just
+%            phase/2pi?
+           multiplicities = [multiplicities abs(phase_change)];
            output_zeros = [output_zeros triangle_gravity_center];
            output_is_stable = false;
            if USE_EARLY_QUIT
                 if USE_FILE_SAVE
-                    write_delaunay_output(output_is_stable, -1, output_zeros);
+                    write_delaunay_output(output_is_stable, -1, output_zeros, multiplicities);
                 end
                 if USE_VERBOSE_PROFILING
                    display(['(Early quit) system is unstale, zero found at: ' num2str(output_zeros)]);
@@ -206,7 +217,7 @@ for triangle_id = 1:triangle_count
                 return
            end
        elseif(phase_change <= -1)
-           singularities = [singularities triangle_gravity_center];
+           singularities = [singularities triangle_gravity_center multiplicity];
        end
    end
 end
@@ -231,6 +242,7 @@ tic;
 distance_from_origin_for_poles = abs(output_zeros);
 if USE_VERBOSE_PROFILING
     disp(['Located system zeros: ' num2str(output_zeros)]);
+    disp(['Zeros multiplicities: ' num2str(multiplicities)]);
     if min(distance_from_origin_for_poles) < 1
         disp('The system is unstable, one of the inverted zeros lays inside the unit circle')
     else
@@ -317,11 +329,14 @@ if(USE_VERBOSE_PROFILING)
     xlim([-plot_lim plot_lim])
     ylim([-plot_lim plot_lim])
     plot(sin(aux_x), cos(aux_x), 'k');
+    plot(golden_triangles(:, 1), golden_triangles(:, 2))
+    multip = 100*eps;
+    xlim([0.5 - multip 0.5 + multip])
+    ylim([0.0 - multip 0.0 + multip])
 
     duration = toc;
     section_time_log = [section_time_log [section_name duration]];
-    
-    
+   
     x = -1:0.01:1;
     f_abs = abs(arrayfun(input_function, x + x'*1i));
     f_ang = angle(arrayfun(input_function, x + x'*1i));
@@ -348,7 +363,8 @@ if(USE_VERBOSE_PROFILING)
     end
     
 end
+
 if USE_FILE_SAVE
-   write_delaunay_output(output_is_stable, -1, output_zeros);
+   write_delaunay_output(output_is_stable, -1, output_zeros, multiplicities);
 end
 end
