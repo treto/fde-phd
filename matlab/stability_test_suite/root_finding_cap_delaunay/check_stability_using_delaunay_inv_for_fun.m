@@ -125,6 +125,7 @@ while (1) % if added any new triangle in this iteration
         if ~isempty(new_vertices)
 %             triangle_gravity_center = [sum(V(triangle_vertice_ids, 1))/3 sum(V(triangle_vertice_ids, 2))/3];
             V_new = [V_new; new_vertices];
+%             V = V_new;
             V = [V; new_vertices];
         end
     end
