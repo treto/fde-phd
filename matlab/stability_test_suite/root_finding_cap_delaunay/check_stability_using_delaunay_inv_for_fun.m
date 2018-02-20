@@ -34,7 +34,8 @@ distance = sqrt(mid_point(1)^2 + mid_point(2)^2);
 multiplier = 1/distance; 
 V = V*multiplier;
 % defines minimum edge length to continue triang, i.e. defines accuracy
-min_distance_r = eps*1000;
+% min_distance_r = eps*1000;
+min_distance_r = 10e-7;
 
 % Verifies if edge crosses any two quartiles, also if len is larger than
 % resolution, if so then a point between these two vertices is returned
@@ -82,6 +83,8 @@ vert_id_combinations = combnk([1 2 3], 2)'; % all vertice combinations for a tri
 tri = [];
 triangle_count = 0;
 
+% new_vertices = zeros(1000000,1);
+
 while (1) % if added any new triangle in this iteration
     if USE_VERBOSE_PROFILING
         display(['Iteration: ', num2str(iter_id)]);
@@ -101,7 +104,6 @@ while (1) % if added any new triangle in this iteration
     % evaluate characteristic equation value at each triangle vertice
     % z = jw
     tran_fun_values = arrayfun(input_function, V(:,1) + V(:, 2)*1i);
-    
 %   tri = delaunayTriangulation(V);
 %   ISSUE: For some reason, delaunay sometimes produces a "triangle" that is 3
 %   points on an ALMOST stright line, we then try to add a point on the
@@ -119,8 +121,7 @@ while (1) % if added any new triangle in this iteration
                 new_vertices = [new_vertices; new_vert];
                 % TODO: how to only use new vertices?
 %                 new_vertices = [new_vertices; new_vert; V(triangle_vertice_ids(vertice_combination), :)];
-            end
-            
+            end            
         end
         if ~isempty(new_vertices)
 %             triangle_gravity_center = [sum(V(triangle_vertice_ids, 1))/3 sum(V(triangle_vertice_ids, 2))/3];

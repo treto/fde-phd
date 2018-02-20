@@ -29,6 +29,7 @@ y = y./max(y);
 y2 = y2./max(y2);
 t = t./max(t);
 
+h = figure;
 plot(t, y, 'k--');
 hold on
 plot(t, y2, 'k--');
@@ -43,8 +44,8 @@ y_seg_locs = line_seg_y(1):((line_seg_y(2) - line_seg_y(1))/4):line_seg_y(2);
 % TOP_LEFT
 scatter(x_seg_locs,y_seg_locs, 'kx')
 text(x_seg_locs(2)-0.05, y_seg_locs(2)+0.05,'...', 'FontSize',12, 'FontName', 'TimesNewRoman')
-text(x_seg_locs(3)-0.08, y_seg_locs(3)+0.05,'p_n_-_1', 'FontSize',12, 'FontName', 'TimesNewRoman')
-text(x_seg_locs(4)-0.05, y_seg_locs(4)+0.05,'p_n', 'FontSize',12, 'FontName', 'TimesNewRoman')
+text(x_seg_locs(3)-0.09, y_seg_locs(3)+0.05,'p_n_-_1', 'FontSize',12, 'FontName', 'TimesNewRoman')
+text(x_seg_locs(4)-0.06, y_seg_locs(4)+0.05,'p_n', 'FontSize',12, 'FontName', 'TimesNewRoman')
 text(x_seg_locs(5)-0.02, y_seg_locs(5)+0.05,'p_o', 'FontSize',12, 'FontName', 'TimesNewRoman')
 scatter((x_seg_locs(1) + x_seg_locs(2))/2, (y_seg_locs(1) + y_seg_locs(2))/2, 'k<')
 % text(x_seg_locs(5)-0.05, y_seg_locs(5)+0.05,'p_n', 'FontSize',12, 'FontName', 'TimesNewRoman')
@@ -85,3 +86,7 @@ text(0.9, 0.4,'IV', 'FontSize',14, 'FontName', 'TimesNewRoman')
 % patch(y, y2, 'red')
 
 axis square
+set(h,'Units','Inches');
+pos = get(h,'Position');
+set(h,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+print(h,'triangle_phase_integral','-dpdf','-r0')
