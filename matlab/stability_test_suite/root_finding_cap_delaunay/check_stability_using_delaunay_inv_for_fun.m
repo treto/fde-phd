@@ -225,10 +225,10 @@ for triangle_id = 1:triangle_count
            output_is_stable = false;
            
 %            
-           global system_zeros;
+%            global system_zeros;
 %            fname = sprintf('high_order_sys_%d.mat', length(system_zeros));
-           fname = sprintf('system_tri_V')
-           save(fname, 'tri', 'V');
+%            fname = sprintf('system_tri_V');
+%            save(fname, 'tri', 'V');;
            
            if USE_EARLY_QUIT
                 if USE_FILE_SAVE
