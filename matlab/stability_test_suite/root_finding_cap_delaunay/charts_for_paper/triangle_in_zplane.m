@@ -44,17 +44,17 @@ y_seg_locs = line_seg_y(1):((line_seg_y(2) - line_seg_y(1))/4):line_seg_y(2);
 % TOP_LEFT
 scatter(x_seg_locs,y_seg_locs, 'kx')
 text(x_seg_locs(2)-0.05, y_seg_locs(2)+0.05,'...', 'FontSize',12, 'FontName', 'TimesNewRoman')
-text(x_seg_locs(3)-0.09, y_seg_locs(3)+0.05,'p_n_-_1', 'FontSize',12, 'FontName', 'TimesNewRoman')
-text(x_seg_locs(4)-0.06, y_seg_locs(4)+0.05,'p_n', 'FontSize',12, 'FontName', 'TimesNewRoman')
-text(x_seg_locs(5)-0.02, y_seg_locs(5)+0.05,'p_o', 'FontSize',12, 'FontName', 'TimesNewRoman')
+text(x_seg_locs(3)-0.09, y_seg_locs(3)+0.05,'w_p_-_1', 'FontSize',12, 'FontName', 'TimesNewRoman')
+text(x_seg_locs(4)-0.06, y_seg_locs(4)+0.05,'w_p', 'FontSize',12, 'FontName', 'TimesNewRoman')
+text(x_seg_locs(5)-0.02, y_seg_locs(5)+0.05,'w_1', 'FontSize',12, 'FontName', 'TimesNewRoman')
 scatter((x_seg_locs(1) + x_seg_locs(2))/2, (y_seg_locs(1) + y_seg_locs(2))/2, 'k<')
 % text(x_seg_locs(5)-0.05, y_seg_locs(5)+0.05,'p_n', 'FontSize',12, 'FontName', 'TimesNewRoman')
 
 % TOP_RIGHT
 x_seg_locs = line_seg_x(2):((line_seg_x(3) - line_seg_x(2))/4):line_seg_x(3);
 y_seg_locs = line_seg_y(2):((line_seg_y(3) - line_seg_y(2))/4):line_seg_y(3);
-text(x_seg_locs(2)+0.0, y_seg_locs(2)+0.05,'p_1', 'FontSize',12, 'FontName', 'TimesNewRoman')
-text(x_seg_locs(3)-0.0, y_seg_locs(3)+0.05,'p_2', 'FontSize',12, 'FontName', 'TimesNewRoman')
+text(x_seg_locs(2)+0.0, y_seg_locs(2)+0.05,'w_2', 'FontSize',12, 'FontName', 'TimesNewRoman')
+text(x_seg_locs(3)-0.0, y_seg_locs(3)+0.05,'w_3', 'FontSize',12, 'FontName', 'TimesNewRoman')
 text(x_seg_locs(4)-0.0, y_seg_locs(4)+0.05,'...', 'FontSize',12, 'FontName', 'TimesNewRoman')
 
 scatter((x_seg_locs(1) + x_seg_locs(2))/2, (y_seg_locs(1) + y_seg_locs(2))/2, 'k<')
@@ -74,6 +74,8 @@ scatter(x_seg_locs,y_seg_locs, 'kx')
 % patch([t flip(t)], [max(y, y2) ones(1, length(t))], 'red');
 % patch([t flip(t)], [min(y, y2) zeros(1, length(t))], 'red');
 xlim([0 1])
+xlabel('Re[F(w)]')
+ylabel('Im[F(w)]')
 ylim([0 1])
 set(gca,'YTickLabel',[]);
 set(gca,'XTickLabel',[]);

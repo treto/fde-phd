@@ -3,11 +3,11 @@
 % @param input complex value as the input to char equation to evaluate
 %
 % @retval complex value
-function point = latawiec_eval_func(input)
+function point = ruszewski_example2(input)
     %z=input^(-1);
     p=input;
     global alpha
-%     alpha=0.7;
+%     alpha=0.1843;
     a11=0.6;
     a12=-1.45;
     a21=1;

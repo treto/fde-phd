@@ -6,7 +6,8 @@
 function point = ruszewski_eval_func(input)
     p=input;
     alpha=0.5;
-    af=-1.42;%-1.5;
+    global af;
+%     af=-1.42;%-1.5;
     w=(p^(-1))*(1-p)^alpha;
     point = w - af;
     point = point*p;

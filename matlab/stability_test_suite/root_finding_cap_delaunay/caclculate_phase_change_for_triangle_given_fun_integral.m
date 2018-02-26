@@ -22,6 +22,11 @@ end
 
 last_point_id = (numel(edge_points)/2); 
 for point_id=2:last_point_id
+%      global H;
+    complex(edge_points(point_id, 1), edge_points(point_id,2));
+%      evalfr(H, complex(edge_points(point_id, 1), edge_points(point_id,2)));
+    input_function(complex(edge_points(point_id, 1), edge_points(point_id,2)));
+    angle(input_function(complex(edge_points(point_id, 1), edge_points(point_id,2))));
     ang_sum = ang_sum + angle(input_function(complex(edge_points(point_id, 1), edge_points(point_id,2)))/input_function(complex(edge_points(point_id-1, 1), edge_points(point_id-1,2))));
 end
 ang_sum = ang_sum + angle(input_function(complex(edge_points(1, 1), edge_points(1,2)))/input_function(complex(edge_points(last_point_id, 1), edge_points(last_point_id,2))));

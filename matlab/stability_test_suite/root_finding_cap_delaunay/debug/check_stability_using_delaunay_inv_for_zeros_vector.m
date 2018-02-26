@@ -59,11 +59,12 @@ y = 2*x_max*rand(1, size_x(2))-x_max;
 V = [x' y'];
 % defines minimum edge length to continue triang, i.e. defines accuracy
 min_distance_r = 0.005;
+min_distance_r = 10e-15;
 iter_id = 0;
 is_point_added = true;
 
 tri = [];
-while is_point_added == true && iter_id < 10
+while is_point_added == true
     if USE_VERBOSE_PROFILING
         display(['Iteration: ', num2str(iter_id)]);
     end

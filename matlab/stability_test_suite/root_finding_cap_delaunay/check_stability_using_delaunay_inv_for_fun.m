@@ -24,7 +24,7 @@ tic;
 % init starting points for Delaunay triangulation
 %ISSUE2: for some reason, changing this by reducing number of points can
 %cause the algorithm not to converge on some zeros
-number_of_init_points = 12;
+number_of_init_points = 1024;
 step_init = (2*pi)/number_of_init_points;
 V = [sin(0:step_init:2*pi)' cos(0:step_init:2*pi)'];
 %As circle is approximated, we need to multiply to ensure that unit circle
@@ -35,7 +35,11 @@ multiplier = 1/distance;
 V = V*multiplier;
 % defines minimum edge length to continue triang, i.e. defines accuracy
 % min_distance_r = eps*1000;
-min_distance_r = 10e-7;
+min_distance_r = 10e-3;
+% defines how edges are divided into steps for integration to apply
+% Cauchy's Arg Principle
+integral_step = 10e-1;
+% integral_step = ;
 
 % Verifies if edge crosses any two quartiles, also if len is larger than
 % resolution, if so then a point between these two vertices is returned
@@ -82,8 +86,7 @@ plot_lim = 1.1;
 vert_id_combinations = combnk([1 2 3], 2)'; % all vertice combinations for a triangle
 tri = [];
 triangle_count = 0;
-
-% new_vertices = zeros(1000000,1);
+new_vertices = zeros(1000000,1);
 
 while (1) % if added any new triangle in this iteration
     if USE_VERBOSE_PROFILING
@@ -94,6 +97,10 @@ while (1) % if added any new triangle in this iteration
     % e.g tri(N) = [100 256 324]
     % V[100] = [0.3 0.4i]
     tri = delaunay(V(:, 1), V(:, 2));
+    if(iter_id == 3 || iter_id == 9)
+        a = 5;
+    end
+    
     new_triangle_count = numel(tri);
     if(triangle_count == new_triangle_count)
         disp('breaking!');
@@ -139,6 +146,7 @@ while (1) % if added any new triangle in this iteration
         plot_delaunay_convergence(tri, V, V_new, iter_id);
     end
 end
+display(['Iteration count:' num2str(iter_id)])
 
 duration = toc;
 section_time_log = [section_time_log [section_name duration]];
@@ -203,11 +211,11 @@ for triangle_id = 1:triangle_count
    if(abs(triangle_gravity_center) < 1)
 %        Only searches for zeros inside the unit circle
 %          phase_change = calculate_phase_change_for_triangle_given_fun(input_function, V(triangle_vertices, :), eps);
-         phase_change = caclculate_phase_change_for_triangle_given_fun_integral(input_function, V(triangle_vertices, :), 0.0001);
+         phase_change = caclculate_phase_change_for_triangle_given_fun_integral(input_function, V(triangle_vertices, :), integral_step);
 %          TODO: depending on the direction, the argument may sum up to -1
 %          or 1, the sign depends on this, so possibly should switch to
 %          abs(phase_change) instead
-       if(phase_change >= (1 - min_distance_r))
+       if(abs(phase_change) >= (1 - min_distance_r))
            final_triangles = [final_triangles; triangles_near_zeros(triangle_id,:)];
            golden_triangles = [golden_triangles; V(triangle_vertices, :)];
 %            multiplicity = log2(phase_change); #Is it log2 or just
@@ -215,6 +223,13 @@ for triangle_id = 1:triangle_count
            multiplicities = [multiplicities abs(phase_change)];
            output_zeros = [output_zeros triangle_gravity_center];
            output_is_stable = false;
+           
+%            
+           global system_zeros;
+%            fname = sprintf('high_order_sys_%d.mat', length(system_zeros));
+           fname = sprintf('system_tri_V')
+           save(fname, 'tri', 'V');
+           
            if USE_EARLY_QUIT
                 if USE_FILE_SAVE
                     write_delaunay_output(output_is_stable, -1, output_zeros, multiplicities);
@@ -225,6 +240,7 @@ for triangle_id = 1:triangle_count
                 return
            end
        elseif(phase_change <= -1)
+%            phase_change
            singularities = [singularities triangle_gravity_center multiplicity];
        end
    end
