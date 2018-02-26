@@ -1,8 +1,10 @@
 close all
 clear all
-
+warning('off','all')
 display('running our algorithm tests');
-alfa_ranges = 0.12:0.005:0.20;
+alfa_ranges = 0.14:0.005:0.2;
+% alfa_ranges = 0.10;%:0.005:0.20;
+% alfa_ranges = 0.184;
 sys_data = [];
 for new_alpha=alfa_ranges
     global alpha;

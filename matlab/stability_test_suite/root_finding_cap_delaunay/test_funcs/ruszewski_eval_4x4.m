@@ -16,7 +16,7 @@ function point = ruszewski_example2(input)
     w=(p^-1)*(1-p)^alpha;
     A_2 = eye(4)*w;
     A_f = A_2 - A;
-    point = det(A_f);
+    point = p^4*det(A_f);
     
      %w=z*(1-(z^(-1)))^alpha;
     %point = (w-a11)*(w-a22)-a21*a12;

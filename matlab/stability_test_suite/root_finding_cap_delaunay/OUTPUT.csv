@@ -245,3 +245,4 @@ timestamp,00:06:19.194,is_stable,0,duration,-1,zeros,0.59013-0.80177i,0.59265+0.
 timestamp,00:08:36.690,is_stable,0,duration,-1,zeros,0.59013-0.80177i,0.59265+0.80121i,1,1
 timestamp,00:10:27.836,is_stable,0,duration,-1,zeros,0.59364-0.8043i,0.59404+0.8044i,1,1
 timestamp,00:11:31.013,is_stable,0,duration,-1,zeros,0.59439+0.80305i,1
+timestamp,19:22:30.849,is_stable,1,duration,-1,zeros,

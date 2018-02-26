@@ -24,7 +24,7 @@ tic;
 % init starting points for Delaunay triangulation
 %ISSUE2: for some reason, changing this by reducing number of points can
 %cause the algorithm not to converge on some zeros
-number_of_init_points = 1024;
+number_of_init_points = 12;
 step_init = (2*pi)/number_of_init_points;
 V = [sin(0:step_init:2*pi)' cos(0:step_init:2*pi)'];
 %As circle is approximated, we need to multiply to ensure that unit circle
@@ -227,8 +227,8 @@ for triangle_id = 1:triangle_count
 %            
 %            global system_zeros;
 %            fname = sprintf('high_order_sys_%d.mat', length(system_zeros));
-%            fname = sprintf('system_tri_V');
-%            save(fname, 'tri', 'V');;
+           fname = sprintf('system_tri_V');
+           save(fname, 'tri', 'V');;
            
            if USE_EARLY_QUIT
                 if USE_FILE_SAVE
