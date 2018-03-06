@@ -25,10 +25,12 @@ print(h,'debug','-dpdf','-r0')
 %%%%%%%%% PLOTTING CLOSE UP ON THE ZERO, zero location must be
 %%%%%%%%% copy-paseted! :(
 %zero_place = -0.9974 - 0.0015i; %ruszewski for -1.415
-zero_place = 0.5944 - 0.8030i; %latawiec for 0.775
+% zero_place = 0.5944 - 0.8030i; %latawiec for 0.775
+zero_place = 0.82681-0.53806i; %lpc 
 precision = 10e-3;
 %zero_place = -0.9974 - 0.0015i; % ruszewski 4x4
-zero_place = -0.5711-0.0002i; % kaczorek
+% zero_place = -0.5711-0.0002i; % kaczorek
+% zero_place = 0.34536+0.021899i; % butter
 h = figure();
 plot_lim = 1.1;
 % clear all
@@ -40,6 +42,7 @@ ylim([imag(zero_place) - precision*3 imag(zero_place) + precision*3])
 % title('Delaunay triangulation')
 hold on
 aux_x = 0:0.05:(2*pi+0.05);
+
 plot(sin(aux_x), cos(aux_x),'k--', 'LineWidth', 1.5);
 % plot(sin(aux_x), cos(aux_x),'k--')
 scatter(real(zero_place), imag(zero_place), 'kx', 'LineWidth', 1.5);
