@@ -57,6 +57,7 @@ function new_vertice = evaluate_edge_for_sign_change_and_len(edge_vertices)
     edge_vert_values = tran_fun_values(edge_vertices);
     if (is_vertices_sign_changed(edge_vert_values(1), edge_vert_values(2)))
          points = V(edge_vertices, :);
+%          sqrt(sum(((points(1,:) - points(2,:)).^ 2)))
          if sqrt(sum(((points(1,:) - points(2,:)).^ 2))) > min_distance_r
              new_vertice = sum(points)/2;
          end
@@ -88,7 +89,8 @@ tri = [];
 triangle_count = 0;
 new_vertices = zeros(1000000,1);
 
-while (1) % if added any new triangle in this iteration
+point_added = true;
+while (iter_id < 50) % if added any new triangle in this iteration
     if USE_VERBOSE_PROFILING
         display(['Iteration: ', num2str(iter_id)]);
     end
@@ -106,6 +108,12 @@ while (1) % if added any new triangle in this iteration
         disp('breaking!');
         break
     end
+    
+%     if point_added == false
+%         disp('breaking!');
+%         break;
+%     end
+%     point_added = false;
     triangle_count = new_triangle_count;
    
     % evaluate characteristic equation value at each triangle vertice
@@ -135,6 +143,7 @@ while (1) % if added any new triangle in this iteration
             V_new = [V_new; new_vertices];
 %             V = V_new;
             V = [V; new_vertices];
+            point_added = true;
         end
     end
     
@@ -143,7 +152,7 @@ while (1) % if added any new triangle in this iteration
          disp(['Vertices (used by delaunay): ' num2str(numel(tri))]);
     end
     if ~isempty(V_new)
-        plot_delaunay_convergence(tri, V, V_new, iter_id);
+%         plot_delaunay_convergence(tri, V, V_new, iter_id);
     end
 end
 display(['Iteration count:' num2str(iter_id)])

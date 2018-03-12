@@ -254,3 +254,12 @@ timestamp,06:25:33.948,is_stable,0,duration,-1,zeros,0.3486-0.023418i,1
 timestamp,06:25:52.578,is_stable,0,duration,-1,zeros,0.34536-0.021899i,1
 timestamp,06:26:39.778,is_stable,0,duration,-1,zeros,0.34536-0.021899i,1
 timestamp,06:39:54.229,is_stable,0,duration,-1,zeros,0.82869-0.53915i,0.82681+0.53806i,1,1
+timestamp,12:11:48.444,is_stable,0,duration,-1,zeros,0.66348+0.72388i,0.66369-0.7229i,0.75551-0.45245i,0.75551+0.45159i,1,1,1,1
+timestamp,13:59:26.306,is_stable,0,duration,-1,zeros,0.99084-7.3726e-17i,0.98153-0.000337i,1,1
+timestamp,14:02:59.668,is_stable,0,duration,-1,zeros,0.82967-0.53816i,0.82681+0.53806i,1,1
+timestamp,14:03:30.430,is_stable,0,duration,-1,zeros,0.82967-0.53816i,0.82681+0.53806i,1,1
+timestamp,18:37:38.078,is_stable,0,duration,-1,zeros,0.82967-0.53816i,0.82681+0.53806i,1,1
+timestamp,20:08:21.966,is_stable,0,duration,-1,zeros,0.82967-0.53816i,0.82681+0.53806i,1,1
+timestamp,20:08:52.802,is_stable,0,duration,-1,zeros,0.82967-0.53816i,0.82681+0.53806i,1,1
+timestamp,20:15:46.791,is_stable,0,duration,-1,zeros,0.82967-0.53816i,0.82681+0.53806i,1,1
+timestamp,20:19:02.071,is_stable,0,duration,-1,zeros,0.82967-0.53816i,0.82681+0.53806i,1,1

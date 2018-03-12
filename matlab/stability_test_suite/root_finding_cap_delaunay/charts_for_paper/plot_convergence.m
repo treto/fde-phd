@@ -26,7 +26,7 @@ print(h,'debug','-dpdf','-r0')
 %%%%%%%%% copy-paseted! :(
 %zero_place = -0.9974 - 0.0015i; %ruszewski for -1.415
 % zero_place = 0.5944 - 0.8030i; %latawiec for 0.775
-zero_place = 0.82681-0.53806i; %lpc 
+zero_place = 0.82967+0.53816i;
 precision = 10e-3;
 %zero_place = -0.9974 - 0.0015i; % ruszewski 4x4
 % zero_place = -0.5711-0.0002i; % kaczorek
