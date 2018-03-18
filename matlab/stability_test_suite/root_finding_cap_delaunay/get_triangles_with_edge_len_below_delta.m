@@ -13,8 +13,8 @@ function [found_triangles, triangle_count] = get_triangles_with_edge_len_below_d
         edge_len = pdist(triangle,'euclidean');
     %     TODO: the if statement probably needs some tweaking not to miss
     %     anything
+        max(edge_len)
         if(max(edge_len) < (min_distance_r))
-            max(edge_len)
             found_triangles = [found_triangles; triangle_vertice_ids];
         end
     end    

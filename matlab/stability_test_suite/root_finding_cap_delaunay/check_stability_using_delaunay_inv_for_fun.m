@@ -6,15 +6,23 @@
 % @param USE_FILE_SAVE         - saves output to .csv file
 % @param USE_EARLY_QUIT        - algorithm stops as soon as a single zero
 % is located
+% @param USE_FULL_PHASE_CHANGE - if true, then both real and imag parts
+% must change sign to add new point, else either is sufficient
 % 
 % @retval output_is_stable  - boolean value if system is stable
 % @retval output_zeros      - list of zeros
-function [output_is_stable, output_zeros] = check_stability_using_delaunay_inv_for_fun(input_function, USE_VERBOSE_PROFILING, USE_FILE_SAVE, USE_EARLY_QUIT)
+function [output_is_stable, output_zeros] = check_stability_using_delaunay_inv_for_fun(input_function, USE_VERBOSE_PROFILING, USE_FILE_SAVE, USE_EARLY_QUIT, USE_FULL_PHASE_CHANGE)
 close all
 %% Auxiliary variables
 section_time_log = [];
 output_is_stable = true;
 local_colormap = hsv(256); %colormap
+if USE_FULL_PHASE_CHANGE
+    sign_change_fun_handle = @is_vertices_sign_changed_full_phase_change;
+else
+    sign_change_fun_handle = @is_vertices_sign_changed_either_real_or_imag;
+end
+
 %% Delaunay 
 section_name = 'Section: Delaunay triangulation';
 if USE_VERBOSE_PROFILING
@@ -33,13 +41,16 @@ mid_point = (V(1,:) + V(2,:))/2;
 distance = sqrt(mid_point(1)^2 + mid_point(2)^2);
 multiplier = 1/distance; 
 V = V*multiplier;
+
+% SUGGESTED VALUES FOR EITHER REAL OR IMAG PHASE CHANGE
 % defines minimum edge length to continue triang, i.e. defines accuracy
-% min_distance_r = eps*1000;
-min_distance_r = 1e-2;
+min_distance_r = 1e-3;
 % defines how edges are divided into steps for integration to apply
 % Cauchy's Arg Principle
-integral_step = 10e-1;
-% integral_step = ;
+integral_step = 1e-1;
+
+% SUGGESTED VALUES FOR FULL PHASE CHANGE
+% min_distance_r = 1e-7;
 
 % Verifies if edge crosses any two quartiles, also if len is larger than
 % resolution, if so then a point between these two vertices is returned
@@ -55,22 +66,21 @@ integral_step = 10e-1;
 function new_vertice = evaluate_edge_for_sign_change_and_len(edge_vertices)
     new_vertice = [];
     edge_vert_values = tran_fun_values(edge_vertices);
-    if (is_vertices_sign_changed(edge_vert_values(1), edge_vert_values(2)))
+    if (sign_change_fun_handle(edge_vert_values(1), edge_vert_values(2)))
          points = V(edge_vertices, :);
-%          sqrt(sum(((points(1,:) - points(2,:)).^ 2)))
          if sqrt(sum(((points(1,:) - points(2,:)).^ 2))) > min_distance_r
              new_vertice = sum(points)/2;
          end
     end
 end
 
-function new_vertice = add_new_vertice_based_on_triangle_phase(triangle_vertices)
-    new_vertice = [];
-    phase_change = caclculate_phase_change_for_triangle_given_fun_integral(input_function, triangle_vertices, eps);
-    if phase_change >= 1
-        new_vertice = sum(V(triangle_vertices, 1))/3 + sum(V(triangle_vertices, 2))*1i/3;
-    end
-end
+% function new_vertice = add_new_vertice_based_on_triangle_phase(triangle_vertices)
+%     new_vertice = [];
+%     phase_change = caclculate_phase_change_for_triangle_given_fun_integral(input_function, triangle_vertices, eps);
+%     if phase_change >= 1
+%         new_vertice = sum(V(triangle_vertices, 1))/3 + sum(V(triangle_vertices, 2))*1i/3;
+%     end
+% end
 
 function plot_delaunay_convergence(tri, V, V_new, iteration)
      triplot(tri, V(:, 1), V(:, 2), 'color', local_colormap(iteration,:));
@@ -98,33 +108,21 @@ while (iter_id < 50) % if added any new triangle in this iteration
     % e.g tri(N) = [100 256 324]
     % V[100] = [0.3 0.4i]
     tri = delaunay(V(:, 1), V(:, 2));
-    if(iter_id == 3 || iter_id == 9)
-        a = 5;
-    end
-    
     new_triangle_count = numel(tri);
     if(triangle_count == new_triangle_count)
         disp('breaking!');
         break
     end
     
-%     if point_added == false
-%         disp('breaking!');
-%         break;
-%     end
-%     point_added = false;
     triangle_count = new_triangle_count;
    
     % evaluate characteristic equation value at each triangle vertice
     % z = jw
+    tic
     tran_fun_values = arrayfun(input_function, V(:,1) + V(:, 2)*1i);
-%   tri = delaunayTriangulation(V);
-%   ISSUE: For some reason, delaunay sometimes produces a "triangle" that is 3
-%   points on an ALMOST stright line, we then try to add a point on the
-%   edge/2 of this triangle, but it is already included, so the algorithm
-%   gets stuck
-
+    toc
     V_new = [];
+    tic
     % for each triangle, each edge
     for triangle_id = 1:numel(tri(:, 1))
         triangle_vertice_ids = tri(triangle_id, :);
@@ -145,7 +143,7 @@ while (iter_id < 50) % if added any new triangle in this iteration
             point_added = true;
         end
     end
-    
+    toc
     if USE_VERBOSE_PROFILING
          disp(['Vertices (all): ' num2str(numel(V))]);
          disp(['Vertices (used by delaunay): ' num2str(numel(tri))]);
@@ -168,9 +166,7 @@ if USE_VERBOSE_PROFILING
     disp(section_name);
 end
 tic;
-% Curves
-% min_distance_r = 0.005;
-% eps = 2*min_distance_r;
+
 C_r = [];
 C_i = [];
 C_cross = [];
@@ -215,7 +211,7 @@ golden_triangles = [];
 % For each triangle, calculate phase change based on the vertices
 for triangle_id = 1:triangle_count
    triangle_vertices = triangles_near_zeros(triangle_id, :);
-   triangle_gravity_center = sum(V(triangle_vertices, 1))/3 + sum(V(triangle_vertices, 2))*1i/3;
+   triangle_gravity_center = sum(V(triangle_vertices, 1))/3 + sum(V(triangle_vertices, 2))*1i/3
    if(abs(triangle_gravity_center) < 1)
 %        Only searches for zeros inside the unit circle
 %          phase_change = calculate_phase_change_for_triangle_given_fun(input_function, V(triangle_vertices, :), eps);
@@ -232,11 +228,10 @@ for triangle_id = 1:triangle_count
            output_zeros = [output_zeros triangle_gravity_center];
            output_is_stable = false;
            
-%            
 %            global system_zeros;
 %            fname = sprintf('high_order_sys_%d.mat', length(system_zeros));
            fname = sprintf('system_tri_V');
-           save(fname, 'tri', 'V');;
+           save(fname, 'tri', 'V');
            
            if USE_EARLY_QUIT
                 if USE_FILE_SAVE
@@ -247,9 +242,9 @@ for triangle_id = 1:triangle_count
                 end
                 return
            end
-       elseif(phase_change <= -1)
-%            phase_change
-           singularities = [singularities triangle_gravity_center multiplicity];
+% %        Singularities are removed
+%        elseif(phase_change <= -1)
+%            singularities = [singularities triangle_gravity_center multiplicity];
        end
    end
 end

@@ -6,7 +6,8 @@ function [output_is_stable, output_zeros] = check_stability_using_delaunay_inv_f
 input_function,
  USE_VERBOSE_PROFILING,
  USE_FILE_SAVE,
- USE_EARLY_QUIT)
+ USE_EARLY_QUIT,
+ USE_FULL_PHASE_CHANGE)
 
 Sample function call:
-check_stability_using_delaunay_inv_for_fun(@kaczorek_eval_func, 1, 1, 0)
+check_stability_using_delaunay_inv_for_fun(@kaczorek_eval_func, 1, 1, 0, 1)
