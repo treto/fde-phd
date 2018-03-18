@@ -35,7 +35,7 @@ multiplier = 1/distance;
 V = V*multiplier;
 % defines minimum edge length to continue triang, i.e. defines accuracy
 % min_distance_r = eps*1000;
-min_distance_r = 10e-3;
+min_distance_r = 1e-3;
 % defines how edges are divided into steps for integration to apply
 % Cauchy's Arg Principle
 integral_step = 10e-1;
@@ -152,7 +152,7 @@ while (iter_id < 50) % if added any new triangle in this iteration
          disp(['Vertices (used by delaunay): ' num2str(numel(tri))]);
     end
     if ~isempty(V_new)
-%         plot_delaunay_convergence(tri, V, V_new, iter_id);
+         plot_delaunay_convergence(tri, V, V_new, iter_id);
     end
 end
 display(['Iteration count:' num2str(iter_id)])
