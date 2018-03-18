@@ -211,7 +211,7 @@ golden_triangles = [];
 % For each triangle, calculate phase change based on the vertices
 for triangle_id = 1:triangle_count
    triangle_vertices = triangles_near_zeros(triangle_id, :);
-   triangle_gravity_center = sum(V(triangle_vertices, 1))/3 + sum(V(triangle_vertices, 2))*1i/3
+   triangle_gravity_center = sum(V(triangle_vertices, 1))/3 + sum(V(triangle_vertices, 2))*1i/3;
    if(abs(triangle_gravity_center) < 1)
 %        Only searches for zeros inside the unit circle
 %          phase_change = calculate_phase_change_for_triangle_given_fun(input_function, V(triangle_vertices, :), eps);
