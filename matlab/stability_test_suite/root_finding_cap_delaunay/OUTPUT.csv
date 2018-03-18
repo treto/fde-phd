@@ -1,7 +1,4 @@
-timestamp,18:41:56.009,is_stable,0,duration,-1,zeros,0.82967-0.53816i,0.82681+0.53806i,1,1
-timestamp,18:44:08.076,is_stable,0,duration,-1,zeros,0.82924-0.53674i,0.82924+0.53674i,1,1
-timestamp,19:08:33.914,is_stable,0,duration,-1,zeros,0.82901-0.53641i,0.82938+0.53641i,1,1
-timestamp,19:10:08.184,is_stable,0,duration,-1,zeros,0.82924-0.53674i,0.82924+0.53674i,1,1
-timestamp,19:35:29.612,is_stable,0,duration,-1,zeros,0.82924-0.53674i,0.82924+0.53674i,1,1
-timestamp,19:40:08.567,is_stable,0,duration,-1,zeros,0.34712-0.021899i,1
-timestamp,20:09:01.489,is_stable,0,duration,-1,zeros,-0.56991-3.2206e-05i,1
+timestamp,20:45:53.533,is_stable,0,duration,-1,zeros,-0.57114+0.00019797i,1
+timestamp,20:48:31.284,is_stable,0,duration,-1,zeros,-0.57114+0.00019797i,1
+timestamp,20:48:48.957,is_stable,0,duration,-1,zeros,-0.57114+0.00019797i,1
+timestamp,21:09:54.130,is_stable,0,duration,-1,zeros,-0.57114+0.00019797i,1

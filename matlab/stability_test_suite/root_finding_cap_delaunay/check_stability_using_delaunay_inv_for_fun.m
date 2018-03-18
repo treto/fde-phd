@@ -35,7 +35,7 @@ multiplier = 1/distance;
 V = V*multiplier;
 % defines minimum edge length to continue triang, i.e. defines accuracy
 % min_distance_r = eps*1000;
-min_distance_r = 1e-3;
+min_distance_r = 1e-2;
 % defines how edges are divided into steps for integration to apply
 % Cauchy's Arg Principle
 integral_step = 10e-1;
@@ -66,7 +66,6 @@ end
 
 function new_vertice = add_new_vertice_based_on_triangle_phase(triangle_vertices)
     new_vertice = [];
-%     phase_change = calculate_phase_change_for_triangle_given_fun(input_function, triangle_vertices, eps);
     phase_change = caclculate_phase_change_for_triangle_given_fun_integral(input_function, triangle_vertices, eps);
     if phase_change >= 1
         new_vertice = sum(V(triangle_vertices, 1))/3 + sum(V(triangle_vertices, 2))*1i/3;
