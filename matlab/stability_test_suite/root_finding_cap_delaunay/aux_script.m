@@ -1,13 +1,20 @@
-close all
+input_function = @sample_eval_func;
 
-fz_roots = [(0.8+0.2i) (0.8-0.2i) (0.85 + 0.55i) (0.85 - 0.55i) (0.7 + 0.65i) (0.7 -0.65i) (-0.25+0.5i) (-0.25 -0.5i) (-0.23+0.8i) (-0.23-0.8i) (-0.6+0.7i) (-0.6-0.7i)];
+dist_per = 0:0.1:1;
 
-fz = zpk([], fz_roots, 1, 1);
-fz = tf(fz);
-[num, dem, Ts] = tfdata(fz);
-dem = dem{:};
-w_params = flip(dem) %parametry A(w^-1) dla 'rozwinietej' postaci
-roots(dem); %pierwiastki rownania char A(z)
-roots(w_params) %pierwsiastki rownania char A(w^-1)
-scatter(real(fz_roots), imag(fz_roots))';
-abs(fz_roots)';
+triangle_vertices = [0 0; 1 1; 1 2];
+
+vert = triangle_vertices;
+
+dist_a_b = sqrt(sum((vert(1, :) - vert(2, :)).^2))
+dist_b_c = sqrt(sum((vert(2, :) - vert(3, :)).^2))
+dist_c_a = sqrt(sum((vert(3, :) - vert(1, :)).^2))
+
+edge_points = 
+
+
+
+
+%% Argument computations using division
+x = 0:delta_r:1;
+diff_v = vert(2,:) - vert(1,:);

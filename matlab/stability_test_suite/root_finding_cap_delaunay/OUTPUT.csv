@@ -33,3 +33,11 @@ timestamp,23:08:16.666,is_stable,0,duration,-1,zeros,-0.56984+1.7066e-08i,1
 timestamp,23:08:27.151,is_stable,0,duration,-1,zeros,-0.56996+0.00019762i,1
 timestamp,23:10:04.730,is_stable,0,duration,-1,zeros,-0.56996+0.00019762i,1
 timestamp,23:11:05.613,is_stable,0,duration,-1,zeros,-0.56996+0.00019762i,1
+timestamp,19:48:41.023,is_stable,0,duration,-1,zeros,-0.56996+0.00019762i,1
+timestamp,19:49:00.216,is_stable,1,duration,-1,zeros,
+timestamp,19:49:10.903,is_stable,1,duration,-1,zeros,
+timestamp,19:49:22.343,is_stable,1,duration,-1,zeros,
+timestamp,20:53:53.895,is_stable,0,duration,-1,zeros,-0.56984+2.4223e-11i,1
+timestamp,21:06:35.775,is_stable,1,duration,-1,zeros,
+timestamp,21:06:50.447,is_stable,0,duration,-1,zeros,-0.56984+2.3766e-15i,1
+timestamp,21:09:57.424,is_stable,0,duration,-1,zeros,-0.56984+2.3766e-15i,1

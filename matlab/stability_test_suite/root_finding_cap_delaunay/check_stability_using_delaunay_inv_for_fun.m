@@ -44,10 +44,11 @@ V = V*multiplier;
 
 % SUGGESTED VALUES FOR EITHER REAL OR IMAG PHASE CHANGE
 % defines minimum edge length to continue triang, i.e. defines accuracy
-min_distance_r = 1e-3;
+min_distance_r = eps*100;
 % defines how edges are divided into steps for integration to apply
 % Cauchy's Arg Principle
-integral_step = 1e-1;
+% Suggested value: 0.1 (smaller than min_distance_r)
+integral_step = 0.1;
 
 % SUGGESTED VALUES FOR FULL PHASE CHANGE
 % min_distance_r = 1e-7;
@@ -99,7 +100,7 @@ triangle_count = 0;
 new_vertices = zeros(1000000,1);
 
 point_added = true;
-while (iter_id < 50) % if added any new triangle in this iteration
+while (point_added == true) % if added any new triangle in this iteration
     if USE_VERBOSE_PROFILING
         display(['Iteration: ', num2str(iter_id)]);
     end
@@ -214,8 +215,9 @@ for triangle_id = 1:triangle_count
    triangle_gravity_center = sum(V(triangle_vertices, 1))/3 + sum(V(triangle_vertices, 2))*1i/3;
    if(abs(triangle_gravity_center) < 1)
 %        Only searches for zeros inside the unit circle
-%          phase_change = calculate_phase_change_for_triangle_given_fun(input_function, V(triangle_vertices, :), eps);
-         phase_change = caclculate_phase_change_for_triangle_given_fun_integral(input_function, V(triangle_vertices, :), integral_step);
+%          phase_change = calculate_phase_change_for_triangle_given_fun(input_function, V(triangle_vertices, :), eps);  
+       phase_change = caclculate_phase_change_for_triangle_given_fun_integral(input_function, V(triangle_vertices, :), integral_step);
+         
 %          TODO: depending on the direction, the argument may sum up to -1
 %          or 1, the sign depends on this, so possibly should switch to
 %          abs(phase_change) instead
